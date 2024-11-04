@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# Generate a new QHTCP experiment directory
+# Copyright 2024 Bryan C. Roessler
+
+echo "This script supports one optional argument, a project name"
+
+PROJECTS_DIR="/mnt/data/StudiesQHTCP"
+TEMPLATE_DIR="/mnt/data/StudiesQHTCP/_TEMPLATE_2copy_rename_4every_new_QHTCPstudy_23_1001"
+PROJECT_PREFIX="$(whoami)-$(date +%y-%m-%d)"
+
+ask_project_name() { read -r -p "Enter a new project name: " PROJECT_NAME; }
+
+if [[ $# == 1 ]]; then
+  PROJECT_NAME="$1"
+else
+  ask_project_name
+fi
+
+PROJECT_DIR="$PROJECTS_DIR/$PROJECT_PREFIX-$PROJECT_NAME"
+
+while [[ -d $PROJECT_DIR ]]; do
+  echo "A project already exists at $PROJECT_DIR"
+  ask_project_name
+  PROJECT_DIR="$PROJECTS_DIR/$PROJECT_PREFIX-$PROJECT_NAME"
+done
+
+if mkdir "$PROJECT_DIR" &&
+cp -a "$TEMPLATE_DIR"/* "$PROJECT_DIR"; then
+  echo "New project created at $PROJECT_DIR"
+fi
+
+

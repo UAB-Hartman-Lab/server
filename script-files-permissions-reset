@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Smartly change permissions on selected directories
+# Copyright 2021 Bryan C. Roessler
+
+parent="${BASH_SOURCE[0]}"
+parent=${parent%/*}
+
+[[ -f $parent/script-functions ]] && . "$parent"/script-functions || exit 1
+
+is_root
+
+[[ $# -eq 0 ]] && DIRS=("/mnt/data") || DIRS=("$@")
+
+ask_ok "Reset permissions on ${DIRS[*]}?"
+
+chgrp smbgrp -R "${DIRS[@]}" && \
+chmod 6775 -R "${DIRS[@]}"
+
+exit $?

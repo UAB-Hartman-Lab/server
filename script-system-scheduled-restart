@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# Update and restart the system
+# Copyright 2021 Bryan C. Roessler
+
+parent="${BASH_SOURCE[0]}"
+parent=${parent%/*}
+
+[[ -f $parent/script-functions ]] && . "$parent"/script-functions || exit 1
+
+is_root
+
+[[ $# -eq 0 ]] && time='*-*-* 01:30:00' # 1:30AM
+[[ $# -gt 1 ]] && time="$*"
+
+script-system-update
+
+ask_ok "Set a scheduled reboot for $time?" || exit 1
+
+cat <<- EOF > "/usr/lib/systemd/system/scheduled-reboot.timer"
+[Unit]
+Description=Scheduled reboot
+
+[Timer]
+OnCalendar=$time
+Unit=reboot.target
+
+[Install]
+WantedBy=timers.target
+EOF
+
+systemctl daemon-reload
+systemctl start scheduled-reboot.timer
+
+# Current date
+dt=$(date '+%d/%m/%Y %H:%M:%S');
+
+message="System restart scheduled for $time. The current time is $dt. Make sure all changes are saved."
+
+# Graphical notification
+IFS=$'\n'
+for LINE in $(w -hs); do
+    USER=$(echo "$LINE" | awk '{print $1}')
+    USER_ID=$(id -u "$USER")
+    DISP_ID=$(echo "$LINE" | awk '{print $8}')
+    sudo -u "$USER" DISPLAY="$DISP_ID" DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/"$USER_ID"/bus notify-send "$message" --icon=dialog-warning
+done
+
+# Wall notification
+wall -n "$message"
+
+exit $?

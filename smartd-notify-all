@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Notify all users on S.M.A.R.T errors
+# Place in /usr/share/smartmontools/smartd_warning.d/ or use "DEVICESCAN -m @smartd-notify-all" in /etc/smartd.conf
+# Copyright 2021 Bryan C. Roessler
+
+parent="${BASH_SOURCE[0]}"
+parent=${parent%/*}
+
+[[ -f $parent/script-functions ]] && . "$parent"/script-functions || exit 1
+
+is_root
+
+IFS=$'\n'
+for LINE in $(w -hs); do
+    USER=$(echo "$LINE" | awk '{print $1}')
+    USER_ID=$(id -u "$USER")
+    DISP_ID=$(echo "$LINE" | awk '{print $8}')
+    sudo su "$USER" DISPLAY="$DISP_ID" DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/"$USER_ID"/bus notify-send "S.M.A.R.T Error ($SMARTD_FAILTYPE) $SMARTD_MESSAGE" --icon=dialog-warning
+done

@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+# Add a user to the Hartman Lab server
+# Copyright Bryan C. Roessler
+
+parent="${BASH_SOURCE[0]}"
+parent=${parent%/*}
+
+[[ -f $parent/script-functions ]] && . "$parent"/script-functions || exit 1
+
+is_root
+
+echo "This script supports two optional arguments, a username and password"
+
+if [[ $# -eq 0 ]]; then
+    prompt user
+    prompt password
+elif [[ $# -eq 1 ]]; then
+    user="$1"
+    prompt password
+elif [[ $# -eq 2 ]]; then
+    user="$1"
+    password="$2"
+elif [[ $# -gt 2 ]]; then
+    echo "Too many arguments provided"
+    exit 1
+fi
+
+useradd_cmd=(useradd -m -U)
+
+if id -u "$user" &>/dev/null; then
+    ask_ok "User $user exists. Run script-user-remove first?" || exit $?
+    "$parent"/script-user-remove "$user" || exit $?
+fi
+
+ask_ok "Create user $user with password $password?" || exit $?
+
+restore=0
+if [[ -d /mnt/array/home-retired/$user ]]; then
+    ask_ok "Restore user $user's files from /mnt/array/home-retired/$user?" && restore=1
+fi
+
+samba=0
+ask_ok "Enable shared file access for user $user?" && group_str="smbgrp" && samba=1
+
+ask_ok "Make $user an admin?" && \
+    group_str+=",wheel"
+
+useradd_cmd+=("-G" "$group_str")
+useradd_cmd+=("$user")
+
+if (( restore )); then
+    if rsync -av --progress=info2 /mnt/array/home-retired/"$user" /home/"$user"; then
+        ask_ok "User $user's files successfully restored, remove backup at /mnt/array/home-retired/$user?" && \
+            rm -rf /mnt/array/home-retired/"$user"
+    fi
+fi
+
+# echo "Running: ${useradd_cmd[*]}"
+"${useradd_cmd[@]}"
+echo "$user":"$password" | chpasswd
+
+
+if (( samba )); then
+    (echo "$password"; echo "$password") | smbpasswd -a -s "$user"
+fi
+
+ask_ok "Prompt user to reset password on next login?" &&
+passwd --expire "$user" &&
+echo "NOTE: The file sharing (smbpasswd) will not be changed"
+
+# TODO check if centos 9 does by default
+# Add subuids & subgids for container namespace
+# id_offset=100000
+# id_num=65536
+# last_uid=$(tail -1 /etc/subuid | cut -d':' -f2)
+# last_gid=$(tail -1 /etc/subgid | cut -d':' -f2)
+# start_uid=$(( last_uid + id_offset ))
+# start_gid=$(( last_gid + id_offset ))
+# echo "$user:$start_uid:$id_num" >> /etc/subuid
+# echo "$user:$start_gid:$id_num" >> /etc/subgid
+
+# Copy manual to user desktop
+desktop="/home/$user/Desktop"
+[[ -d $desktop ]] || sudo -u "$user" mkdir -p "$desktop"
+copy_manual "$desktop"
+
+exit 0

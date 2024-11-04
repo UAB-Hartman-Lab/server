@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# Reset default desktop preferences
+# Copyright Bryan C. Roessler
+
+parent="${BASH_SOURCE[0]}"
+parent=${parent%/*}
+
+[[ -f $parent/script-functions ]] && . "$parent"/script-functions || exit 1
+
+echo "This script will only work for the current user"
+
+[[ $EUID -eq 0 ]] && echo "Do not run as root (do not use sudo)" && exit 1
+
+to_reset=(
+  /org/mate/panel/
+  /org/mate/panel/objects/
+  /org/mate/desktop/background/
+  /org/mate/desktop/font-rendering/
+  /org/mate/desktop/interface/
+  /org/mate/desktop/screensaver/
+  /org/mate/desktop/media-handling/
+  /org/mate/desktop/screensaver/
+  /org/mate/mate-menu/
+  /org/mate/marco/general/
+  /org/mate/caja/desktop/
+  /org/mate/caja/preferences/
+  /org/mate/notification-daemon/
+)
+
+echo "Resetting desktop for user $(whoami)"
+for p in "${to_reset[@]}"; do
+  dconf reset -f "$p"
+done
+
+mate-panel --reset

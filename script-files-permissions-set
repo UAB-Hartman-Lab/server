@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+# Smartly change permissions on selected directories
+# Copyright 2021 Bryan C. Roessler
+
+parent="${BASH_SOURCE[0]}"
+parent=${parent%/*}
+
+[[ -f $parent/script-functions ]] && . "$parent"/script-functions || exit 1
+
+is_root
+
+if [[ $# -eq 0 ]]; then
+    echo "No arguments provided, using autodetection"
+    paths=("$PWD")
+    user=$(stat -c "%U" "$PWD")
+    group=$(stat -c "%G" "$PWD")
+elif [[ $# -eq 1 ]]; then
+    user="$1"
+    group="$1"
+    paths=("$PWD")
+elif [[ $# -eq 2 ]]; then
+    user="$1"
+    group="$2"
+    paths=("$PWD")
+elif [[ $# -gt 2 ]]; then
+    user="$1"
+    group="$2"
+    paths=("${@:3}")
+fi
+
+for path in "${paths[@]}"; do 
+    if [[ "$path" == "/" ]]; then
+        echo "You are trying to operate on the root partition!"
+        echo "This seems highly unusual!"
+        ask_ok "Continue?" || exit $?
+    fi
+    og_user=$(stat -c "%U" "$path")
+    og_group=$(stat -c "%G" "$path")
+    echo -e "PATH\tUSER\tGROUP"
+    echo -e "$path\t$og_user\t$og_group"
+    if [[ "$group" != "smbgrp" || "$og_group" != "smbgrp" ]]; then
+        echo "$path is not world accessible by the smbgrp group"
+        ask_ok "Change $path group $og_group to smbgrp?" && group="smbgrp"
+    fi
+done
+
+
+ask_ok "Apply user: $user and group: $group to ${paths[*]} and all subdirs?" && \
+    chown -R "$user":"$group" "${paths[@]}"
+
+[[ "$group" == "smbgrp" ]] && mode=6775 || mode=755
+    
+ask_ok "Apply chmod $mode to ${paths[*]} and all subdirs?" && \
+    chmod -R $mode "${paths[@]}"
+
+# Let's do it in less steps (see above) for now unless it becomes a problem
+# echo "Apply setuid/setgid bits to ${paths[*]} and all subdirs?"
+# ask_ok "Files/dirs will inherit their " && \
+#     chmod -R g+s,u+s "${paths[@]}"    
+
+
+exit $?

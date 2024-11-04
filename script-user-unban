@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Unbans a fail2ban IP
+# Copyright 2021 Bryan C. Roessler
+
+parent="${BASH_SOURCE[0]}"
+parent=${parent%/*}
+
+[[ -f $parent/script-functions ]] && . "$parent"/script-functions || exit 1
+
+is_root
+
+echo "This script supports one optional argument, an IP address"
+
+if [[ $# -eq 1 ]]; then
+    ip_address="$1"
+else
+    prompt ip_address
+fi
+
+if fail2ban-client set sshd unbanip "$ip_address"; then
+  echo "IP address $ip_address unbanned"
+fi
+
+exit $?

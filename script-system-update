@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Update the system
+# Copyright 2021 Bryan C. Roessler
+
+parent="${BASH_SOURCE[0]}"
+parent=${parent%/*}
+
+[[ -f $parent/script-functions ]] && . "$parent"/script-functions || exit 1
+
+is_root
+
+ask_ok "Security updates are automatically installed, perform a full system update?" || exit $?
+
+dnf update --refresh

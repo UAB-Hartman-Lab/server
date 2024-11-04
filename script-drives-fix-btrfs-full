@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Fix the btrfs out of space error
+# Copyright 2021 Bryan C. Roessler
+
+parent="${BASH_SOURCE[0]}"
+parent=${parent%/*}
+
+[[ -f $parent/script-functions ]] && . "$parent"/script-functions || exit 1
+
+is_root
+
+fs=( "/mnt/array" "/mnt/backup" )
+
+# Discard empty blocks
+for f in "${fs[@]}"; do
+    btrfs balance start -dusage=0 "$f"
+    btrfs balance start -musage=0 "$f"
+done
+
+exit $?
