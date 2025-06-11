@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # This script will add scripts-* to the PATH and the manual to each user's desktop
-# Copyright 2021-2023 Bryan C. Roessler
+# Copyright 2021-2024 Bryan C. Roessler
 
 parent="${BASH_SOURCE[0]}"
 parent=${parent%/*}
@@ -15,21 +15,19 @@ if [[ "$original_dir" != "$sourcedir" ]]; then
     pushd "$sourcedir" || exit $?
 fi
 
-(( reload )) && [[ -f $parent/script-functions ]] && . "$parent"/script-functions
-
-is_root
+((reload)) && [[ -f $parent/script-functions ]] && . "$parent"/script-functions
 
 target=/usr/local/bin
 for script in script-*; do
-    echo "Installing $script to $target"
+    echo "Linking $script to $target"
     [[ $script == "script-functions" ]] && install -m 644 "$script" "$target"
-    cp -u "$script" "$target/"
+    sudo ln -s "$script" "$target/"
 done
 
 # Install manual link
 remove=("manual.pdf" "manual.odt" "Notes.pdf" "Notes.odt" 
-"README.html" "Link to Manual.desktop" "manual-images" 
-"manual.html" "manual-images" "Manual.desktop" "manual.desktop")
+    "README.html" "Link to Manual.desktop" "manual-images" 
+    "manual.html" "manual-images" "Manual.desktop" "manual.desktop")
 for homedir in /home/*; do
     desktop="$homedir/Desktop"
     [[ -d $desktop ]] || continue

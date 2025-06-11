@@ -3,29 +3,20 @@
 # Use --all to reset all user X2Go sessions
 # Copyright Bryan C. Roessler
 
-parent="${BASH_SOURCE[0]}"
-parent=${parent%/*}
+parent="${BASH_SOURCE[0]%/*}"
+[[ -f $parent/script-functions ]] && . "$parent/script-functions" || exit 1
 
-[[ -f $parent/script-functions ]] && . "$parent"/script-functions || exit 1
+echo "Usage: $0 [username|--all]"
 
-echo "This script supports one optional argument, a username (or --all for all users)"
-
-USER_MODE=0
 USER_LIST=()
 if [[ $EUID -gt 0 ]]; then
-    echo "This script should normally be run as root (with sudo)"
-    echo "Attempting to run in user mode"
-    USER_MODE=1
-    USER_LIST+=($(whoami))
+    echo "Run as root for all users. Running in user mode for: $(whoami)"
+    USER_LIST+=("$(whoami)")
 else
-    if [[ $# -eq 1 ]]; then
-        if [[ $1 == '--all' ]]; then
-            for i in /home/*; do
-                USER_LIST+=("${i##*/}")
-            done
-        else
-            USER_LIST+=("$1")
-        fi
+    if [[ $1 == "--all" ]]; then
+        for d in /home/*; do [[ -d $d ]] && USER_LIST+=("${d##*/}"); done
+    elif [[ -n $1 ]]; then
+        USER_LIST+=("$1")
     else
         prompt user
         USER_LIST+=("$user")
@@ -34,26 +25,27 @@ else
 fi
 
 for user in "${USER_LIST[@]}"; do
-    # Clean local user cache
+    # Remove X2Go cache files
     shopt -s nullglob
     caches=(/home/"$user"/.x2go/C-"$user"-* /home/"$user"/.xsession-x2go-*)
     shopt -u nullglob
-    if [[ ${#caches} -gt 0 ]]; then
-        ask_ok "Remove X2Go cache files for user $user?" &&
-        rm -rf /home/"$user"/.x2go/C-"$user"-* &&
-        echo "Removed: ${caches[*]} for user $user"
+    if (( ${#caches[@]} )); then
+        ask_ok "Remove X2Go cache files for $user?" &&
+        rm -rf "${caches[@]}" &&
+        echo "Removed: ${caches[*]} for $user"
     fi
-    # Clean X2Go sessions
-    if (( USER_MODE )); then
-        mapfile -t sessions < <(x2golistsessions | grep "$user"| cut -f2 -d'|')
+
+    # Terminate X2Go sessions
+    if [[ $EUID -gt 0 ]]; then
+        mapfile -t sessions < <(x2golistsessions | grep "$user" | cut -f2 -d'|')
     else
-        mapfile -t sessions < <(x2golistsessions_root | grep "$user"| cut -f2 -d'|')
+        mapfile -t sessions < <(x2golistsessions_root | grep "$user" | cut -f2 -d'|')
     fi
-    if [[ ${#sessions} -gt 0 ]]; then
-        ask_ok "Terminate X2Go sessions for user $user?" &&
+    if (( ${#sessions[@]} )); then
+        ask_ok "Terminate X2Go sessions for $user?" &&
         for session in "${sessions[@]}"; do
             x2goterminate-session "$session" &&
-            echo "Terminated: $session for user $user"
+            echo "Terminated: $session for $user"
         done
     fi
 done
