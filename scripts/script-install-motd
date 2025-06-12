@@ -1,0 +1,220 @@
+#!/usr/bin/env bash
+# Install and generate motd
+# Copyright 2019-2025 Bryan C. Roessler
+# Licensed under the Apache License, Version 2.0
+set -euo pipefail
+
+PROG_NAME="$(basename "$0")"
+INSTALL_PATH="/usr/local/bin/$PROG_NAME"
+SERVICE_UNIT="/usr/lib/systemd/system/motd.service"
+TIMER_UNIT="/usr/lib/systemd/system/motd.timer"
+
+usage() {
+  cat <<-EOF
+		Usage: $PROG_NAME [--motd | --install] [--help]
+
+		Options:
+		  --motd       Output MOTD to stdout (used by systemd)
+		  --install    Instal motd systemd service and timer
+		  -h, --help   Show this help message
+EOF
+}
+
+print_motd() {
+  # ANSI color codes
+  local default='\033[0m' green='\033[0;32m' red='\033[0;31m'
+  local dim='\033[2m' undim='\033[22m'
+
+  cat <<-'EOF'
+		 _    _            _                           _           _     
+		| |  | |          | |                         | |         | |    
+		| |__| | __ _ _ __| |_ _ __ ___   __ _ _ __   | |     __ _| |__  
+		|  __  |/ _` | `__| __| `_ ` _ \ / _` | `_ \  | |    / _` | `_ \ 
+		| |  | | (_| | |  | |_| | | | | | (_| | | | | | |___| (_| | |_) |
+		|_|  |_|\__,_|_|   \__|_| |_| |_|\__,_|_| |_| |______\__,_|_.__/ 
+	EOF
+
+  # System info
+  read -r LOAD1 LOAD5 LOAD15 < <(awk '{print $1, $2, $3}' /proc/loadavg)
+  read -r USED AVAIL TOTAL < <(free -htm | awk '/^Mem:/ {print $3, $7, $2}')
+
+  local ROOT_PROCS NONROOT_PROCS TOTAL_PROCS
+  ROOT_PROCS=$(pgrep -u root | wc -l)
+  NONROOT_PROCS=$(( $(ps -eo user= | wc -l) - ROOT_PROCS ))
+  TOTAL_PROCS=$(( ROOT_PROCS + NONROOT_PROCS ))
+
+  local CPU_MODEL CPU_COUNT
+  CPU_MODEL=$(awk -F': ' '/model name/ {print $2; exit}' /proc/cpuinfo)
+  CPU_COUNT=$(grep -c '^processor' /proc/cpuinfo)
+
+  . /etc/os-release
+  local DISTRO="$PRETTY_NAME"
+  local KERNEL; KERNEL="$(uname -sr)"
+  local UPTIME; UPTIME="$(uptime -p)"
+
+  # Load
+  printf "\n"
+  printf "  Distro......: %s\n" "$DISTRO"
+  printf "  Kernel......: %s\n" "$KERNEL"
+  printf "  Uptime......: %s\n" "$UPTIME"
+  printf "  Load........: %b%s%b (1m), %b%s%b (5m), %b%s%b (15m)\n" \
+    "$green" "$LOAD1" "$default" \
+    "$green" "$LOAD5" "$default" \
+    "$green" "$LOAD15" "$default"
+  printf "  Processes...: %b%d%b (root), %b%d%b (user), %b%d%b (total)\n" \
+    "$green" "$ROOT_PROCS" "$default" \
+    "$green" "$NONROOT_PROCS" "$default" \
+    "$green" "$TOTAL_PROCS" "$default"
+  printf "  CPU.........: %s (%b%d%b vCPU)\n" \
+    "$CPU_MODEL" "$green" "$CPU_COUNT" "$default"
+  printf "  Memory......: %b%s%b used, %b%s%b avail, %b%s%b total\n" \
+    "$green" "$USED" "$default" \
+    "$green" "$AVAIL" "$default" \
+    "$green" "$TOTAL" "$default"
+
+  # Disks
+  echo -e "\n  Disk usage"
+  local max_usage=90 bar_width=50
+  while read -r target pcent size; do
+    local use=${pcent%\%}
+    local filled=$(( use * bar_width / 100 ))
+    local bar="["
+
+    local col=$green
+    (( use >= max_usage )) && col=$red
+
+    bar+="$col"
+    for ((i=0;i<filled;i++)); do bar+="="; done
+    bar+="$default$dim"
+    for ((i=filled;i<bar_width;i++)); do bar+="="; done
+    bar+="$undim]"
+
+    printf "    %-25s %3s of %-6s\n" "$target" "$pcent" "$size"
+    printf "    %b\n" "$bar"
+  done < <(
+    df -H -x zfs -x squashfs -x tmpfs -x devtmpfs -x overlay \
+      --output=target,pcent,size | tail -n +2
+  )
+
+  # Services
+  echo -e "\n  Services"
+  local services=(
+    btrfs-balance.timer btrfs-scrub.timer backup.timer btrbk.timer fstrim.timer
+    fail2ban firewalld smb nmb motion smartd cockpit.socket
+    dnf-automatic.timer motd.timer
+  )
+  for ((i=0; i<${#services[@]}; i+=2)); do
+    local s1=${services[i]} s2=${services[i+1]:-}
+    local st1 st2 c1 c2
+    st1=$(systemctl is-active "$s1" 2>/dev/null || echo inactive)
+    st2=$(systemctl is-active "$s2" 2>/dev/null || echo inactive)
+    [[ $st1 == active ]] && c1="${green}$st1${default}" || c1="${red}$st1${default}"
+    [[ $st2 == active ]] && c2="${green}$st2${default}" || c2="${red}$st2${default}"
+    printf "    %-15s : %b    %-15s : %b\n" \
+      "${s1%.*}" "$c1" "${s2%.*}" "$c2"
+  done
+
+	# Fail2Ban
+	read -r -a jails <<< "$(fail2ban-client status | grep "Jail list:" | sed "s/ //g" | awk '{split($2,a,",");for(i in a) print a[i]}')"
+
+	out="jail,failed,total,banned,total\n"
+
+	for jail in "${jails[@]}"; do
+		# Slow because fail2ban-client has to be called for every jail (~70ms per jail)
+		status=$(fail2ban-client status "$jail")
+		failed=$(echo "$status" | grep -ioP '(?<=Currently failed:\t)[[:digit:]]+')
+		totalfailed=$(echo "$status" | grep -ioP '(?<=Total failed:\t)[[:digit:]]+')
+		banned=$(echo "$status" | grep -ioP '(?<=Currently banned:\t)[[:digit:]]+')
+		totalbanned=$(echo "$status" | grep -ioP '(?<=Total banned:\t)[[:digit:]]+')
+		out+="$jail,$failed,$totalfailed,$banned,$totalbanned\n"
+	done
+
+	printf "\nFail2ban\n"
+	printf "%b\n" "$out" | column -ts $',' | sed -e 's/^/  /'
+
+  # Help links
+  cat <<-EOF
+
+		Links (ctrl+click to follow)
+		  Server Manual.........: https://tinyurl.com/jjz9h6fr
+		  Cockpit (for admins)..: http://localhost:9090
+		  Robot Camera..........: http://localhost:9999
+		  JupyterLab............: http://localhost:8888
+		  RStudio Server........: http://localhost:8787
+		  Robot Computer........: vnc://192.168.16.101:5900
+		  Windows 10 VM.........: vnc://localhost:5900 (pw: hartman)
+	EOF
+
+	# Scheduled reboot
+	if systemctl is-active scheduled-reboot.timer &>/dev/null; then
+		echo -n "Next scheduled reboot: "
+		time=$(systemctl cat scheduled-reboot.timer | grep OnCalendar=)
+		time=${time#*=}
+		echo "$time"
+	fi
+
+  if systemctl is-active scheduled-reboot.timer &>/dev/null; then
+    echo -n "  Next reboot  : "
+    systemctl show -p OnCalendar scheduled-reboot.timer | cut -d= -f2
+  fi
+
+  printf "\n"
+}
+
+install_services() {
+  # Write the service unit
+  cat >"$SERVICE_UNIT" <<-EOF
+		[Unit]
+		Description=Generate MoTD
+
+		[Service]
+		Type=oneshot
+		ExecStart=$INSTALL_PATH --motd > /etc/motd
+
+		[Install]
+		WantedBy=multi-user.target
+	EOF
+
+  # Write the timer unit
+  cat >"$TIMER_UNIT" <<-EOF
+		[Unit]
+		Description=Generate MoTD every minute
+
+		[Timer]
+		OnCalendar=*:0/1
+		OnBootSec=10s
+
+		[Install]
+		WantedBy=timers.target
+	EOF
+
+  chmod +x "$INSTALL_PATH"
+  systemctl daemon-reload
+  systemctl enable --now motd.timer
+  echo "Installed and started motd.timer → $SERVICE_UNIT, $TIMER_UNIT"
+}
+
+main() {
+  if [[ ${1:-} == --motd ]]; then
+    print_motd
+    exit 0
+  fi
+
+  if [[ ${1:-} == --install ]]; then
+    if [[ $EUID -ne 0 ]]; then
+      echo "Error: Must run as root to install." >&2
+      exit 1
+    fi
+    cp -f "$0" "$INSTALL_PATH"
+    install_services
+  fi
+
+  if [[ ${1:-} =~ ^(-h|--help)$ ]]; then
+    usage
+    exit 0
+  fi
+
+
+}
+
+main "$@"

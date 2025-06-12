@@ -1,11 +1,8 @@
 #!/usr/bin/env bash
-# Smartly change permissions on selected directories
-# Copyright 2021 Bryan C. Roessler
-
-parent="${BASH_SOURCE[0]}"
-parent=${parent%/*}
-
-[[ -f $parent/script-functions ]] && . "$parent"/script-functions || exit 1
+# Intelligently change permissions on selected directories
+# Copyright 2021-2025 Bryan C. Roessler
+# Licensed under the Apache License, Version 2.0
+p="${BASH_SOURCE[0]%/*}"; [[ -r $p/script-functions ]] && . "$p"/script-functions || exit 1
 
 is_root
 
@@ -36,7 +33,7 @@ for path in "${paths[@]}"; do
     fi
     og_user=$(stat -c "%U" "$path")
     og_group=$(stat -c "%G" "$path")
-    echo -e "PATH\tUSER\tGROUP"
+    printf "%-20s %-10s %-10s\n" "PATH" "USER" "GROUP"
     echo -e "$path\t$og_user\t$og_group"
     if [[ "$group" != "smbgrp" || "$og_group" != "smbgrp" ]]; then
         echo "$path is not world accessible by the smbgrp group"
@@ -44,19 +41,19 @@ for path in "${paths[@]}"; do
     fi
 done
 
-
 ask_ok "Apply user: $user and group: $group to ${paths[*]} and all subdirs?" && \
     chown -R "$user":"$group" "${paths[@]}"
 
+# Set mode based on group:
+# - 6775: Enables read/write/execute for owner and group, with setgid bit for group inheritance.
+# - 755: Enables read/write/execute for owner, and read/execute for group and others.
 [[ "$group" == "smbgrp" ]] && mode=6775 || mode=755
     
 ask_ok "Apply chmod $mode to ${paths[*]} and all subdirs?" && \
-    chmod -R $mode "${paths[@]}"
+    chmod -R "$mode" "${paths[@]}"
 
 # Let's do it in less steps (see above) for now unless it becomes a problem
+# TODO: Implement setuid/setgid functionality to ensure files and directories inherit user/group permissions.
 # echo "Apply setuid/setgid bits to ${paths[*]} and all subdirs?"
 # ask_ok "Files/dirs will inherit their " && \
 #     chmod -R g+s,u+s "${paths[@]}"    
-
-
-exit $?

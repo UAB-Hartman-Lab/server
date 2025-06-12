@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Common functions for the lab scripts
+# Copyright 2021-2025 Bryan C. Roessler
+# Licensed under the Apache License, Version 2.0
+
+export INSTALL_DIR=/usr/local/bin
+
+prompt() { 
+    local user_input
+    read -r -p "Enter $1: " user_input
+    echo "$user_input"
+}
+
+ask_ok() {
+    declare response
+    ((YES_SWITCH)) && return 0
+    read -r -p "$* [y/N]: " response
+    [[ ${response,,} =~ ^(yes|y)$ ]]
+}
+
+is_root() {
+    [[ $EUID -gt 0 ]] && echo "Script must be run with sudo" && exit 1
+}
+

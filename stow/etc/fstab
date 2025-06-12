@@ -1,0 +1,18 @@
+# /etc/fstab
+#
+# Accessible filesystems, by reference, are maintained under '/dev/disk'
+# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info
+#
+UUID=c6c096c8-d635-4890-a080-5de8c88b5441       /                               ext4    defaults 1 1
+UUID=1C8B-AF1E                                  /boot/efi                       vfat    umask=0077,shortname=winnt 0 0
+UUID=32e4f38a-8097-433b-878f-2096f9cad6d5       swap                            swap    defaults 0 0
+UUID=d9f4c4c5-41d5-463d-abf9-b2070e5d3acc       /mnt/array                      btrfs   defaults,compress=zstd:2,x-gvfs-hide,nofail,x-systemd.device-timeout=180s,discard=async,X-fstrim.notrim 0 0
+UUID=d9f4c4c5-41d5-463d-abf9-b2070e5d3acc       /mnt/data                       btrfs   defaults,subvol=data,compress=zstd:2,x-gvfs-show,nofail,x-systemd.device-timeout=180s,discard=async,X-fstrim.notrim 0 0
+UUID=8d4bf94c-f307-40b1-8315-5b15f041c120       /mnt/backup                     btrfs   defaults,compress=zstd:2,nofail,discard=async,X-fstrim.notrim 0 0
+#UUID=6E323E4F323E1C91                          /media/ext1                     ntfs-3g defaults,user,nofail,x-systemd.device-timeout=1,uid=root,gid=smbgrp,dmask=002,fmask=002 0 0
+#UUID=8433-7BB5                                 /media/ext2                     vfat    defaults,user,nofail,x-systemd.device-timeout=1,uid=root,gid=smbgrp,dmask=002,fmask=002 0 0
+#UUID=F474B7AA74B76DCC                          /media/ext3                     ntfs-3g defaults,user,nofail,x-systemd.device-timeout=1,uid=root,gid=smbgrp,dmask=002,fmask=002 0 0
+#UUID=12C23AD8C23AC031                          /media/ext4                     ntfs-3g defaults,user,nofail,x-systemd.device-timeout=1,uid=root,gid=smbgrp,dmask=002,fmask=002 0 0
+#UUID=829AF4939AF484C7                          /media/ext5                     ntfs-3g defaults,user,nofail,x-systemd.device-timeout=1,uid=root,gid=smbgrp,dmask=002,fmask=002 0 0
+#UUID=0628B809375069C3                          /media/ext6                     ntfs-3g defaults,user,nofail,x-systemd.device-timeout=1,uid=root,gid=smbgrp,dmask=002,fmask=002 0 0
+#UUID=686A557F6A554B48                          /media/ext7                     ntfs-3g defaults,user,nofail,x-systemd.device-timeout=1,uid=root,gid=smbgrp,dmask=002,fmask=002 0 0

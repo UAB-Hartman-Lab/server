@@ -1,11 +1,8 @@
 #!/usr/bin/env bash
 # Update and restart the system
-# Copyright 2021 Bryan C. Roessler
-
-parent="${BASH_SOURCE[0]}"
-parent=${parent%/*}
-
-[[ -f $parent/script-functions ]] && . "$parent"/script-functions || exit 1
+# Copyright 2021-2025 Bryan C. Roessler
+# Licensed under the Apache License, Version 2.0
+p="${BASH_SOURCE[0]%/*}"; [[ -r $p/script-functions ]] && . "$p"/script-functions || exit 1
 
 is_root
 
@@ -17,15 +14,15 @@ script-system-update
 ask_ok "Set a scheduled reboot for $time?" || exit 1
 
 cat <<- EOF > "/usr/lib/systemd/system/scheduled-reboot.timer"
-[Unit]
-Description=Scheduled reboot
+	[Unit]
+	Description=Scheduled reboot
 
-[Timer]
-OnCalendar=$time
-Unit=reboot.target
+	[Timer]
+	OnCalendar=$time
+	Unit=reboot.target
 
-[Install]
-WantedBy=timers.target
+	[Install]
+	WantedBy=timers.target
 EOF
 
 systemctl daemon-reload
@@ -34,7 +31,10 @@ systemctl start scheduled-reboot.timer
 # Current date
 dt=$(date '+%d/%m/%Y %H:%M:%S');
 
-message="System restart scheduled for $time. The current time is $dt. Make sure all changes are saved."
+msg_part1="System restart scheduled for $time."
+msg_part2="The current time is $dt."
+msg_part3="Make sure all changes are saved."
+message="$msg_part1 $msg_part2 $msg_part3"
 
 # Graphical notification
 IFS=$'\n'
@@ -47,5 +47,3 @@ done
 
 # Wall notification
 wall -n "$message"
-
-exit $?

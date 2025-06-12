@@ -1,0 +1,75 @@
+#/etc/dconf/db/local.d/99-hartmanlab
+
+[org/mate/desktop/background]
+primary-color='rgb(59,110,165)'
+color-shading-type='solid'
+picture-filename=''
+
+[org/mate/desktop/font-rendering]
+antialiasing='rgba'
+hinting='slight'
+
+[org/mate/desktop/media-handling]
+automount=false
+automount-open=false
+autorun-never=true
+
+[org/mate/desktop/interface]
+gtk-decoration-layout='menu:minimize,maximize,close'
+font-name='Liberation Sans 10'
+monospace-font-name='Liberation Mono 10'
+document-font-name='Liberation Sans 10'
+enable-animations=false
+gtk-enable-animations=false
+gtk-theme='BlueMenta'
+
+[org/mate/screensaver]
+lock-enabled=false
+
+[org/mate/panel/general]
+default-layout='hartmanlab'
+toplevel-id-list=['bottom']
+
+[org/mate/panel/objects/clock/prefs]
+format='12-hour'
+
+[org/mate/panel/toplevels/bottom]
+orientation='bottom'
+y-bottom=0
+
+[org/mate/mate-menu]
+applet-text=''
+plugins-list=['places','system_management', 'newpane', 'applications', 'newpane', 'recent']
+
+[org/mate/mate-menu/plugins/applications]
+last-active-tab=1
+
+[org/mate/mate-menu/plugins/places]
+show-computer=false
+
+[org/mate/mate-menu/plugins/system_management]
+show-control-center=false
+show-lock-screen=true
+show-package-manager=false
+show-quit=false
+show-terminal=true
+
+[org/mate/marco/general]
+compositing-manager=false
+action-double-click-titlebar='toggle_maximize'
+button-layout='menu:minimize,maximize,close'
+num-workspaces=4
+theme='BlueMenta'
+titlebar-font='Liberation Sans Bold 11'
+
+[org/mate/caja/desktop]
+font='Liberation Sans 10'
+
+[org/mate/caja/preferences]
+always-use-location-entry=true
+default-folder-viewer='list-view'
+show-backup-files=true
+
+[org/mate/notification-daemon]
+popup-location='bottom_right'
+theme='slider'

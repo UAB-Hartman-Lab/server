@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Adds the scripts directory to the global PATH 
+# Copyright 2021-2025 Bryan C. Roessler
+# Licensed under the Apache License, Version 2.0
+p="${BASH_SOURCE[0]%/*}"; [[ -r $p/script-functions ]] && . "$p"/script-functions || exit 1
+
+script-deploy-scripts() {
+    local profile_file="/etc/profile.d/99-hartmanlab_server_scripts.sh"
+    echo "Adding $p to global PATH in $profile_file"
+    sudo bash -c "echo 'export PATH=\"\$PATH:$p\"' > '$profile_file'"
+}
+
+# Allow script to be safely sourced
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+	script-deploy-scripts
+	exit
+fi

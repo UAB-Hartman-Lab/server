@@ -1,11 +1,8 @@
 #!/usr/bin/env bash
 # Generic btrfsmaintenance install script
-# Copyright 2021 Bryan C. Roessler
-
-parent="${BASH_SOURCE[0]}"
-parent=${parent%/*}
-
-[[ -f $parent/script-functions ]] && . "$parent"/script-functions || exit 1
+# Copyright 2021-2025 Bryan C. Roessler
+# Licensed under the Apache License, Version 2.0
+p="${BASH_SOURCE[0]%/*}"; [[ -r $p/script-functions ]] && . "$p"/script-functions || exit 1
 
 is_root
 
@@ -57,5 +54,3 @@ systemctl daemon-reload
 
 # Optionally, start and enable the services
 # systemctl enable --now btrfs-scrub
-
-exit $?

@@ -1,0 +1,11 @@
+[DEFAULT]
+bantime = 30m
+bantime.multipliers = 1 2 4 8 16 32 64
+findtime  = 60m
+maxretry = 3
+ignoreip = 127.0.0.0/8 10.0.0.0/8 138.26.0.0/16 
+banaction = iptables-multiport
+
+[sshd]
+enabled = true
+port = ssh

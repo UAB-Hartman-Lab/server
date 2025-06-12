@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Update the system
+# Copyright 2021-2025 Bryan C. Roessler
+# Licensed under the Apache License, Version 2.0
+p="${BASH_SOURCE[0]%/*}"; [[ -r $p/script-functions ]] && . "$p"/script-functions || exit 1
+
+is_root
+
+ask_ok "Security updates are automatically installed, perform a full system update?" || exit $?
+
+dnf update --refresh

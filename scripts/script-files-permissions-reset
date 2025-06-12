@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Smartly change permissions on selected directories
+# Copyright 2021-2025 Bryan C. Roessler
+# Licensed under the Apache License, Version 2.0
+p="${BASH_SOURCE[0]%/*}"; [[ -r $p/script-functions ]] && . "$p"/script-functions || exit 1
+
+is_root
+
+[[ $# -eq 0 ]] && DIRS=("/mnt/data") || DIRS=("$@")
+
+ask_ok "Reset permissions on ${DIRS[*]}?"
+
+if ! chgrp smbgrp -R "${DIRS[@]}"; then
+	echo "Failed to change group ownership" >&2
+	exit 1
+fi
+
+if ! chmod 6775 -R "${DIRS[@]}"; then
+	echo "Failed to change permissions" >&2
+	exit 1
+fi
+
+exit 0

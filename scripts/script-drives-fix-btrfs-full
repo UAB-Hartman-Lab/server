@@ -1,11 +1,8 @@
 #!/usr/bin/env bash
 # Fix the btrfs out of space error
-# Copyright 2021 Bryan C. Roessler
-
-parent="${BASH_SOURCE[0]}"
-parent=${parent%/*}
-
-[[ -f $parent/script-functions ]] && . "$parent"/script-functions || exit 1
+# Copyright 2021-2025 Bryan C. Roessler
+# Licensed under the Apache License, Version 2.0
+p="${BASH_SOURCE[0]%/*}"; [[ -r $p/script-functions ]] && . "$p"/script-functions || exit 1
 
 is_root
 
@@ -16,5 +13,3 @@ for f in "${fs[@]}"; do
     btrfs balance start -dusage=0 "$f"
     btrfs balance start -musage=0 "$f"
 done
-
-exit $?

@@ -1,15 +1,8 @@
 #!/usr/bin/env bash
 # Notify all users on S.M.A.R.T errors
 # Place in /usr/share/smartmontools/smartd_warning.d/ or use "DEVICESCAN -m @smartd-notify-all" in /etc/smartd.conf
-# Copyright 2021 Bryan C. Roessler
-
-parent="${BASH_SOURCE[0]}"
-parent=${parent%/*}
-
-[[ -f $parent/script-functions ]] && . "$parent"/script-functions || exit 1
-
-is_root
-
+# Copyright 2021-2025 Bryan C. Roessler
+# Licensed under the Apache License, Version 2.0
 IFS=$'\n'
 for LINE in $(w -hs); do
     USER=$(echo "$LINE" | awk '{print $1}')

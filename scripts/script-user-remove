@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# Remove a user from the server
+# Copyright 2021-2025 Bryan C. Roessler
+# Licensed under the Apache License, Version 2.0
+p="${BASH_SOURCE[0]%/*}"; [[ -r $p/script-functions ]] && . "$p"/script-functions || exit 1
+
+is_root
+
+echo "This script supports one optional argument, a username"
+
+if [[ $# -eq 1 ]]; then
+  user="$1"
+else
+  prompt user
+fi
+
+if ! id -u "$user" &>/dev/null; then
+  echo "User $user does not exist"
+  exit 1
+fi
+
+ask_ok "Remove user $user?" || exit 1
+
+# Kill user processes
+killall -u "$user"
+
+# Optional backup
+if ask_ok "Backup /home/$user?" && [[ -d /home/$user ]]; then
+  backup_dir="/mnt/array/home-retired/$user"
+  if [[ ! -d $backup_dir ]]; then 
+    btrfs subvolume create "$backup_dir" || exit 1
+  fi
+  rsync -av "/home/$user/" "$backup_dir/" || exit 1
+fi
+
+# Remove from Samba and subuid/subgid
+smbpasswd -x "$user"
+sed -i "/^$user:/d" /etc/subuid
+sed -i "/^$user:/d" /etc/subgid
+
+# Remove user and home directory
+if ! userdel -fr "$user"; then
+  ask_ok "Userdel failed, kill processes again and retry?" || exit 1
+  killall -u "$user" -s SIGKILL
+  userdel -fr "$user"
+fi
+

@@ -1,0 +1,23 @@
+[org.mate.panel.general]
+default-layout='redmond'
+
+[org.mate.desktop.font-rendering]
+antialiasing='rgba'
+hinting='slight'
+
+#[org.mate.desktop.interface]
+#font-name='Liberation Sans 10'
+#document-font-name='Liberation Sans 10'
+#monospace-font-name='Liberation Mono 10'
+
+[org.mate.Marco.general]
+side-by-side-tiling=true
+num-workspaces=2
+compositing-manager=false
+
+[org.mate.media-handling]
+automount=false
+automount-open=false
+
+[org.mate.screensaver]
+lock-enabled=false

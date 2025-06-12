@@ -1,0 +1,72 @@
+#/usr/share/mate-panel/layouts/hartmanlab.layout
+
+[Toplevel bottom]
+expand=true
+orientation=bottom
+size=24
+
+[Object mate-menu]
+object-type=applet
+toplevel-id=bottom
+locked=true
+position=0
+applet-iid=MateMenuAppletFactory::MateMenuApplet
+
+[Object separator]
+object-type=separator
+toplevel-id=bottom
+locked=true
+position=30
+
+[Object firefox]
+object-type=launcher
+toplevel-id=bottom
+locked=true
+position=40
+launcher-location=/usr/share/applications/firefox.desktop
+
+[Object mate-terminal]
+object-type=launcher
+toplevel-id=bottom
+locked=true
+position=64
+launcher-location=/usr/share/applications/mate-terminal.desktop
+
+[Object caja]
+object-type=launcher
+toplevel-id=bottom
+locked=true
+position=88
+launcher-location=/usr/share/applications/caja-browser.desktop
+
+[Object window-list]
+object-type=applet
+toplevel-id=bottom
+locked=true
+position=112
+applet-iid=WnckletFactory::WindowListApplet
+
+[Object workspace-switcher]
+object-type=applet
+toplevel-id=bottom
+locked=true
+panel-right-stick=true
+position=20
+applet-iid=WnckletFactory::WorkspaceSwitcherApplet
+
+[Object notification-area]
+object-type=applet
+toplevel-id=bottom
+locked=true
+panel-right-stick=true
+position=10
+applet-iid=NotificationAreaAppletFactory::NotificationArea
+
+[Object clock]
+object-type=applet
+toplevel-id=bottom
+locked=true
+panel-right-stick=true
+position=0
+applet-iid=ClockAppletFactory::ClockApplet
+
