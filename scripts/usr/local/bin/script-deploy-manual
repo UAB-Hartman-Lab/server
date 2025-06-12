@@ -53,5 +53,5 @@ script-deploy-manual() {
 # Allow script to be safely sourced
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
   script-deploy-manual "$@"
-  exit $?
+  exit
 fi

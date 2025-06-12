@@ -4,9 +4,9 @@
 # Licensed under the Apache License, Version 2.0
 p="${BASH_SOURCE[0]%/*}"; [[ -r $p/script-functions ]] && . "$p"/script-functions || exit 1
 
-is_root
+echo "Usage: sudo $0 [username]"
 
-echo "This script supports one optional argument, a username"
+is_root
 
 if [[ $# -eq 1 ]]; then
   user="$1"

@@ -4,9 +4,9 @@
 # Licensed under the Apache License, Version 2.0
 p="${BASH_SOURCE[0]%/*}"; [[ -r $p/script-functions ]] && . "$p"/script-functions || exit 1
 
-is_root
+echo "Usage: sudo $0 [username] [password]"
 
-echo "Usage: $0 [username] [password]"
+is_root
 
 case $# in
   0) prompt user; prompt password ;;

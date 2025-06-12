@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Common functions for the lab scripts
+# Common functions
 # Copyright 2021-2025 Bryan C. Roessler
 # Licensed under the Apache License, Version 2.0
 
