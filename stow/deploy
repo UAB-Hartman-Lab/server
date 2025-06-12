@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+sudo stow -t / usr etc

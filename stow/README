@@ -1,0 +1,2 @@
+To deploy everything (from this dir): `sudo stow -t / config scripts`
+To only deploy scripts: `sudo stow -t / scripts`
