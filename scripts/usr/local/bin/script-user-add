@@ -9,8 +9,8 @@ echo "Usage: sudo $0 [username] [password]"
 is_root
 
 case $# in
-  0) prompt user; prompt password ;;
-  1) user="$1"; prompt password ;;
+  0) user=$(prompt user); password=$(prompt password) ;;
+  1) user="$1"; password=$(prompt password) ;;
   2) user="$1"; password="$2" ;;
   *) echo "Too many arguments provided"; exit 1 ;;
 esac
