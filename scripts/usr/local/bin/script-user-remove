@@ -11,7 +11,7 @@ is_root
 if [[ $# -eq 1 ]]; then
   user="$1"
 else
-  prompt user
+  user=$(prompt user)
 fi
 
 if ! id -u "$user" &>/dev/null; then
