@@ -16,7 +16,6 @@ case $# in
 esac
 
 useradd_cmd=(useradd -m -U)
-group_str=""
 
 if id -u "$user" &>/dev/null; then
   ask_ok "User $user exists. Run script-user-remove first?" || exit $?
@@ -30,24 +29,31 @@ if [[ -d /mnt/array/home-retired/$user ]]; then
   ask_ok "Restore user $user's files from /mnt/array/home-retired/$user?" && restore=1
 fi
 
+groups=()
 samba=0
-ask_ok "Enable shared file access for user $user?" && group_str="smbgrp" && samba=1
-ask_ok "Make $user an admin?" && group_str+=",wheel"
+if ask_ok "Enable shared file access for user $user?"; then
+  groups+=("smbgrp")
+  samba=1
+fi
 
-[[ -n $group_str ]] && useradd_cmd+=("-G" "$group_str")
+ask_ok "Make $user an admin?" && groups+=("wheel")
+
+if (( ${#groups[@]} )); then
+  useradd_cmd+=("-G" "$(IFS=,; echo "${groups[*]}")")
+fi
 useradd_cmd+=("$user")
 
 "${useradd_cmd[@]}"
 echo "$user:$password" | chpasswd
 
-if (( restore )); then
+if ((restore)); then
   if rsync -av --progress=info2 "/mnt/array/home-retired/$user/" "/home/$user/"; then
     ask_ok "User $user's files successfully restored, remove backup at /mnt/array/home-retired/$user?" && \
       rm -rf "/mnt/array/home-retired/$user"
   fi
 fi
 
-if (( samba )); then
+if ((samba)); then
   (echo "$password"; echo "$password") | smbpasswd -a -s "$user"
 fi
 
