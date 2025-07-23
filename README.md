@@ -1,5 +1,6 @@
----
-Server scripts and configs are organized using GNU stow packages.
+# Deploying
+
+Server scripts and configs are organized using [GNU Stow](https://github.com/aspiers/stow) packages.
 
 Examples:
 

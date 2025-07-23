@@ -142,7 +142,6 @@ print_motd() {
 		  JupyterLab............: http://localhost:8888
 		  RStudio Server........: http://localhost:8787
 		  Robot Computer........: vnc://192.168.16.101:5900
-		  Windows 10 VM.........: vnc://localhost:5900 (pw: hartman)
 	EOF
 
 	# Scheduled reboot
