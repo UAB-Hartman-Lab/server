@@ -19,12 +19,15 @@ Type `sudo script-` and use tab completion to access the following helper progra
   * Reset permissions on `/mnt/data` if no path is provided.
   * Use as a last resort to reset original permissions for shared data.
 * `sudo script-system-scheduled-restart <OnCalendar>`
-  * If not provided, defaults to `*-*-* 01:30:00` (1:30 AM).
+  * If `<OnCalendar>` not provided, defaults to `*-*-* 01:30:00` (1:30 AM).
   * See [Calendar Events](https://www.freedesktop.org/software/systemd/man/systemd.time.html) for formatting.
   * Alerts users via `notify-send` (X2Go), `wall` (SSH), and adds a reminder to the MOTD.
 * `sudo script-user-reset-desktop <username>`
   * Reset a user’s desktop (MATE configuration) to default.
   * Can also be run in user mode (without `sudo`) for personal accounts.
+* `sudo script-system-update`
+  * Update the server using the system package manager.
+  * Best to run prior to scheduled reboot.
 
 ## Cockpit Server Administration
 
@@ -32,9 +35,9 @@ Graphical system settings tool for monitoring and performing common tasks.
 
 In an X2Go session, via a web browser at [`http://localhost:9090`](http://localhost:9090)
 
-## Deploying `stow` server configuration packages
+## Deploying `stow` server packages
 
-Server scripts and configs are organized using [GNU Stow](https://www.gnu.org/software/stow/manual/stow.html) packages and can be deployed directly from this directory.
+Server scripts and configs are organized using [GNU Stow](https://www.gnu.org/software/stow/manual/stow.html) packages and can be deployed from [the root directory](../).
 
 * Deploy system-wide MATE layout and themes: `sudo stow --adopt -R -t / theme`
 * Deploy system-wide scripts: `sudo stow --adopt -R -t / scripts`
@@ -68,7 +71,7 @@ Login via `ssh` or `cat /etc/motd` to view current service statuses.
 
 * Add the UAB DNS servers (`138.26.5.2`, `138.26.5.66`) to the Windows network config to access UAB resources.
 
-#### Allow Access to Samba Share (Windows Bug Workaround)
+#### Enable Access to Samba Share (Windows Bug Workaround)
 
 1. Open `C:\Windows\system32\drivers\etc\hosts` and copy its contents.
 2. Paste into a new text document and add the appropriate `blazerid` and server IP lines.
@@ -87,3 +90,8 @@ Login via `ssh` or `cat /etc/motd` to view current service statuses.
 * Add 20 GB to the Windows VM: `sudo qemu-img resize /var/lib/libvirt/images/win11-5900.qcow2 +20G`
 * Add GParted ISO as boot device and expand the working partition.
 
+## Fixing no local display
+
+Periodically the GPU hardware resets and crashes the local display manager.
+
+To fix, login via ssh and run: `sudo systemctl restart lightdm`

@@ -3,12 +3,11 @@
 ## First-time login
 
 1. Ensure an admin has enabled your user account and provided a username.
-2. Login via [`ssh`](#clients): `ssh username@hartmanlab.genetics.uab.edu` (the default password is your username)
-3. You will be prompted to create a new password and automatically logged out
-4. Login again using new password: `ssh username@hartmanlab.genetics.uab.edu`
-5. Change `samba` password (default password is also your *username*): `smbpasswd`
-6. To change your password again in the future: `passwd`
-7. *Optional*: Generate a public-private keypair on your client and copy it to the server for faster and more secure logins.
+2. Login via [`ssh`](#ssh): `ssh username@hartmanlab.genetics.uab.edu` (default password is your *username*)
+3. You will be prompted to create a new password and then logged out
+4. Login again using your new password: `ssh username@hartmanlab.genetics.uab.edu`
+5. Change the default `samba` password (default password is also your *username*): `smbpasswd`
+6. *Optional*: Generate a public-private keypair on your client and copy it to the server for faster and more secure logins.
 
     ```bash
     ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa_4096
@@ -111,10 +110,17 @@ In an X2Go session, go to *Applications>Internet>Remote Viewer>Connection>New* a
 
 ## Data backup
 
-[`rsync`](https://linux.die.net/man/1/rsync) is recommended for users that would just like to periodically backup their $HOME directory to a local machine.
+[`rsync`](https://linux.die.net/man/1/rsync) is recommended for periodically backing up user files to a local client.
 
 * Copy a user's `$HOME`' directory locally to `/home-backup`: `rsync -azH --delete username@hartmanlab.genetics.uab.edu:/home/username/ home-backup/`
 * Copy a shared directory locally `rsync -azh username@hartmanlab.genetics.uab.edu:/mnt/data/scans/20250723_roessler_project .`
+
+## Troubleshooting
+
+* Reset your X2Go sessions: `script-user-reset-x2go`
+* Reset your X2Go desktop: `script-user-reset-desktop`
+* Change your user login password: `passwd`
+* Change your samba password: `smbpasswd`
 
 ## Resources
 
@@ -126,12 +132,12 @@ In an X2Go session, go to *Applications>Internet>Remote Viewer>Connection>New* a
 ## Platform
 
 * AlmaLinux 9.6 w/ Linux 6.1 LTS Hyperscale SIG kernel
-* Intel Xeon X99 E5-2650v4 CPU
-* 96GB RAM
-* 4TB PCIE3 NVMe SSD: `/`, `/home`
+* Intel Xeon X99 E5-2650v4 12-core CPU
+* 96GB DDR4 RAM
+* 4TB PCIe 3.0 NVMe SSD: `/`, `/home`
 * 20TB btrfs raid1 array: `/mnt/data`
 * 20TB btrfs raid1 backup array: `/mnt/backup`
 
 ## Administrators
 
-See additional documentation in [`docs/README.md`](docs/README.md)
+See additional documentation in [`docs/README.md`](docs/README.md).
