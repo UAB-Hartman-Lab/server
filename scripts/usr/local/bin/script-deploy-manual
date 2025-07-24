@@ -30,4 +30,5 @@ for desktop in /home/*/Desktop; do
 		URL=$manual_url
 		Icon=text-html
 	EOF
+  chmod 644 "$desktop/manual.desktop"
 done
