@@ -58,6 +58,8 @@ The server provides two `samba` shares:
 
 The default `samba` credentials are the same as your server username and password. Users can change their `samba` password using `smbpasswd`.
 
+![samba](docs/imgs/samba.png)
+
 ## `x2goclient`
 
 ![x2go_desktop](docs/imgs/x2go_desktop.png)
