@@ -1,44 +1,26 @@
 #!/usr/bin/env bash
 # This script installs the Hartman Lab Server Manual to each user's desktop
-# Usage: script-deploy-manual USERNAME|--all
 # Copyright 2021-2025 Bryan C. Roessler
 # Licensed under the Apache License, Version 2.0
+p="${BASH_SOURCE[0]%/*}"; [[ -r $p/script-functions ]] && . "$p"/script-functions || exit 1
 
-script-deploy-manual() {
-  local user_arg="$1"
-  local manual_url="https://github.com/UAB-Hartman-Lab/server"
-  local remove=("manual.pdf" "manual.odt" "Notes.pdf" "Notes.odt" \
+manual_url="https://github.com/UAB-Hartman-Lab/server"
+remove=("manual.pdf" "manual.odt" "Notes.pdf" "Notes.odt" \
     "README.html" "Link to Manual.desktop" "manual-images" \
     "manual.html" "Manual.desktop" "manual.desktop")
-  local users=()
 
-  if [[ -z "$user_arg" || "$user_arg" == "--help" ]]; then
-    cat <<-EOF
-			Usage: script-deploy-manual USERNAME|--all
-      
-			USERNAME:   Specify a single user's name.
-			--all:     Deploy the manual to all users with a Desktop directory.
-		EOF
-    return 1
-  fi
+is_root
 
-  if [[ "$user_arg" == "--all" ]]; then
-    for d in /home/*; do [[ -d $d ]] && users+=("${d##*/}"); done
-  else
-    users+=("$user_arg")
-  fi
-
-  for user in "${users[@]}"; do
-    desktop="/home/$user/Desktop"
-    [[ -d $desktop ]] || continue
-    echo "Scanning $desktop for old manuals"
-    for f in "${remove[@]}"; do
-      if [[ -e $desktop/$f || -L $desktop/$f ]]; then
-        echo "Removing $desktop/$f"
-        rm -f "${desktop:?}/$f"
-      fi
-    done
-    echo "Installing manual to $desktop/manual.desktop"
+for desktop in /home/*/Desktop; do
+  [[ -d $desktop ]] || continue
+  echo "Removing old manuals from $desktop"
+  for f in "${remove[@]}"; do
+    if [[ -e $desktop/$f || -L $desktop/$f ]]; then
+      echo "Removing $desktop/$f"
+      rm -f "${desktop:?}/$f"
+    fi
+  done
+  echo "Installing manual to $desktop/manual.desktop"
   cat <<-EOF > "$desktop/manual.desktop"
 		[Desktop Entry]
 		Encoding=UTF-8
@@ -47,11 +29,4 @@ script-deploy-manual() {
 		URL=$manual_url
 		Icon=text-html
 	EOF
-  done
-}
-
-# Allow script to be safely sourced
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-  script-deploy-manual "$@"
-  exit
-fi
+done

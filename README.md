@@ -91,7 +91,7 @@ X2Go sessions can be paused or suspended from the X2Go client window. Multiple s
 
 ## Robot computer remote desktop access
 
-In an X2Go session, go to *Applications>Internet>Remote Viewer>Connection>New* and enter `vnc://192.168.16.101:5900`
+In an X2Go session, go to *Applications>Internet>Remote Viewer>Connection>New* and enter [`vnc://192.168.16.101:5900`](vnc://192.168.16.101:5900)
 
 ## Webcam robot monitoring
 
