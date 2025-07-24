@@ -15,9 +15,10 @@ for desktop in /home/*/Desktop; do
   [[ -d $desktop ]] || continue
   echo "Removing old manuals from $desktop"
   for f in "${remove[@]}"; do
+    [[ -z $f ]] && continue
     if [[ -e $desktop/$f || -L $desktop/$f ]]; then
       echo "Removing $desktop/$f"
-      rm -f "${desktop:?}/$f"
+      rm -f -- "${desktop:?}/$f"
     fi
   done
   echo "Installing manual to $desktop/manual.desktop"
