@@ -30,7 +30,7 @@ Connect to the server remotely using the command line.
 
 ### X forwarding
 
-Launch graphical server programs locally on a client that run on the server.
+Launch graphical server programs locally on a client that execute on the server.
 
 * Linux/OSX
   * Enable X forwarding during ssh login: `ssh -X username@hartmanlab.genetics.uab.edu`
@@ -66,7 +66,7 @@ Users can access an X2Go remote desktop session using `x2goclient` from a client
 
 X2Go sessions can be paused or suspended from the X2Go client window. Multiple sessions can be created on the client, making it possible to select alternate quality settings based on location and bandwidth.
 
-**Note:** Some programs do not continue to run at full speed when an X2Go session is paused. In these cases, the program should be run via `ssh` in a [`tmux`](https://en.wikipedia.org/wiki/Tmux) or [`screen`](https://www.gnu.org/software/screen/) session.
+![x2go_server](docs/imgs/x2go_server.png)
 
 * Session tab
   * Session name: Hartman Lab Server
@@ -74,7 +74,6 @@ X2Go sessions can be paused or suspended from the X2Go client window. Multiple s
   * Login: *`username`*
   * SSH port: `22`
   * Session type: **MATE** (MATE provides the best experience with X2Go)
-    ![x2go_server](docs/imgs/x2go_server.png)
 * Connection tab
   * Set the connection speed to LAN when connecting from within the UAB network and WAN when outside of the UAB network
   * Compression settings should be left unchanged or set to *adaptive*.
@@ -86,8 +85,9 @@ X2Go sessions can be paused or suspended from the X2Go client window. Multiple s
 * Shared folders tab
   * Select folders on the client to be shared with the server during a session. Browse to the chosen folder, add it to the share, and select *automount*.
   * These folders will then appear on the server under `/media/disk/<share_name>`.
-  * Shared folder permissions can be modified by admin for multi-user access.
     ![x2go_server](docs/imgs/x2go_automount.png)
+
+**Note:** Some programs do not continue to run at full speed when an X2Go session is paused. In these cases, the program should be run via `ssh` in a [`tmux`](https://en.wikipedia.org/wiki/Tmux) or [`screen`](https://www.gnu.org/software/screen/) session.
 
 ## Robot computer remote desktop access
 
@@ -121,6 +121,7 @@ In an X2Go session, go to *Applications>Internet>Remote Viewer>Connection>New* a
 * Reset your X2Go desktop: `script-user-reset-desktop`
 * Change your user login password: `passwd`
 * Change your samba password: `smbpasswd`
+* Read the `motd` for service statuses and updates: `cat /etc/motd`
 
 ## Resources
 
