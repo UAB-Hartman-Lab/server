@@ -108,6 +108,7 @@ In an X2Go session, go to *Applications>Internet>Remote Viewer>Connection Addres
 * Locally via a web browser via an SSH tunnel: `ssh -f username@hartmanlab.genetics.uab.edu -L 8787:localhost:8787 -N`
 
 ![rstudio_server](docs/imgs/rstudio_server.png)
+![rstudio_server2](docs/imgs/rstudio_server2.png)
 
 ## Other available software
 
