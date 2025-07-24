@@ -62,6 +62,8 @@ The default `samba` credentials are the same as your server username and passwor
 
 ## `x2goclient`
 
+![x2go_desktop](docs/imgs/x2go_desktop.png)
+
 Access an X2Go remote desktop session using the X2Go `x2goclient` available for Linux/OSX/Windows from the [X2Go website](http://wiki.x2go.org/doku.php) or by installing the `x2goclient` package.
 
 X2Go sessions can be paused or suspended from the X2Go client window. Multiple sessions can be created on the client, making it possible to select alternate quality settings based on location and bandwidth.
