@@ -4,7 +4,7 @@
 # Licensed under the Apache License, Version 2.0
 p="${BASH_SOURCE[0]%/*}"; [[ -r $p/script-functions ]] && . "$p"/script-functions || exit 1
 
-echo "Usage: sudo $0 [username]"
+echo "Usage: sudo $0 <username>"
 
 is_root
 
@@ -63,8 +63,8 @@ ask_ok "Prompt user to reset password on next login?" &&
   passwd --expire "$user" &&
   echo "NOTE: The file sharing (smbpasswd) will not be changed"
 
-# Copy manual to user desktop
-desktop="/home/$user/Desktop"
-mkdir -p "$desktop"
+echo "User successfully created, provide them with the following for first login"
+echo "Username: $user"
+echo "Password: $password"
 
 exit 0

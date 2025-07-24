@@ -4,10 +4,10 @@
 
 Type `sudo script-` and use tab completion to access the following helper programs.  
 
-* `sudo script-user-add <username> <password>`
+* `sudo script-user-add <username>`
 * `sudo script-user-remove <username>`
   * Optionally backup the user home directory to the array before removal.
-* `sudo script-user-reset-password <username> <password>`
+* `sudo script-user-reset-password <username>`
   * Reset a user's password if forgotten.
 * `sudo script-user-reset-x2go <username>`
   * Completely reset the X2Go state for the user (destroys active/paused sessions).
