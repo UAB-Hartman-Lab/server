@@ -2,9 +2,9 @@
 
 ## First-time login
 
-1. Ensure an admin has enabled your user account and provided a username.
+1. Ensure an admin has enabled your user account and provided you a username.
 2. Login via [`ssh`](#ssh): `ssh username@hartmanlab.genetics.uab.edu` (default password is your *username*)
-3. You will be prompted to create a new password and then logged out
+3. You will be prompted to create a new password and then logged out.
 4. Login again using your new password: `ssh username@hartmanlab.genetics.uab.edu`
 5. Change the default `samba` password (default password is also your *username*): `smbpasswd`
 6. *Optional*: Generate a public-private keypair on your client and copy it to the server for faster and more secure logins.
@@ -123,7 +123,7 @@ In an X2Go session, go to *Applications>Internet>Remote Viewer>Connection Addres
 * [`distrobox`](https://github.com/89luca89/distrobox) for custom environments
 * ...and much more ([open an issue](https://github.com/UAB-Hartman-Lab/server/issues) for software requests)
 
-## Data backup
+## Data backups
 
 [`rsync`](https://linux.die.net/man/1/rsync) is recommended for periodically backing up user files to a local client.
 
@@ -147,7 +147,7 @@ There are other tools installed for initiating backups *from* the server, such a
 * [Explainshell](https://explainshell.com/)
 * [UAB Cheaha](https://docs.uabgrid.uab.edu/wiki/Cheaha_GettingStarted)
 
-## Platform
+## Hardware Platform
 
 * AlmaLinux 9.6 w/ Linux 6.1 LTS Hyperscale SIG kernel
 * Intel Xeon X99 E5-2650v4 12-core CPU
