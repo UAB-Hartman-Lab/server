@@ -111,12 +111,14 @@ In an X2Go session, go to *Applications>Internet>Remote Viewer>Connection Addres
 
 ## Other available software
 
-* [VSCode](https://code.visualstudio.com/) (IDE)
+* [VSCode](https://code.visualstudio.com/)
 * [MATLAB](https://www.mathworks.com/help/matlab/index.html)
+* [Jupyter Notebook](https://jupyter.org/)
 * [`qhtcp-workflow`](https://github.com/UAB-Hartman-Lab/qhtcp)
 * [`podman`](https://podman.io/) (containers)
 * [`toolbox`](https://docs.fedoraproject.org/en-US/fedora-silverblue/toolbox/) for custom software
 * [`distrobox`](https://github.com/89luca89/distrobox) for custom environments
+* ...and much more ([open an issue](https://github.com/UAB-Hartman-Lab/server/issues) for software requests)
 
 ## Data backup
 
@@ -125,7 +127,7 @@ In an X2Go session, go to *Applications>Internet>Remote Viewer>Connection Addres
 * Copy a user's `$HOME`' directory locally to `/home-backup` from a client: `rsync -azH --delete username@hartmanlab.genetics.uab.edu:/home/username/ home-backup/`
 * Copy a shared directory locally to the current directory from a client: `rsync -azh username@hartmanlab.genetics.uab.edu:/mnt/data/scans/20250723_roessler_project .`
 
-There are other tools available for initiating backups *from* the server, including `rsnapshot` and `borgbackup`.
+There are other tools installed for initiating backups *from* the server, such as `rsnapshot` and `borgbackup`.
 
 ## Troubleshooting
 
