@@ -6,7 +6,7 @@
 
 script-deploy-manual() {
   local user_arg="$1"
-  local manual_url="https://docs.google.com/document/d/1K_KwAlv8Zljmy-enwmhT6gMTFutlAFglixvpLGBx0VY"
+  local manual_url="https://github.com/UAB-Hartman-Lab/server"
   local remove=("manual.pdf" "manual.odt" "Notes.pdf" "Notes.odt" \
     "README.html" "Link to Manual.desktop" "manual-images" \
     "manual.html" "Manual.desktop" "manual.desktop")

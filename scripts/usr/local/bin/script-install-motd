@@ -136,7 +136,7 @@ print_motd() {
   cat <<-EOF
 
 		Links (ctrl+click to follow)
-		  Server Manual.........: https://tinyurl.com/jjz9h6fr
+		  Server Manual.........: https://github.com/UAB-Hartman-Lab/server
 		  Cockpit (for admins)..: http://localhost:9090
 		  Robot Camera..........: http://localhost:9999
 		  JupyterLab............: http://localhost:8888

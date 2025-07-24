@@ -14,8 +14,6 @@
     ssh-copy-id -i ~/.ssh/id_rsa_4096.pub username@hartmanlab.genetics.uab.edu
     ```
 
-    Users may need to add their keypair to PuTTy/Filezilla/WinSCP manually.
-
 ## `ssh`
 
 Connect to the server remotely using the command line.
@@ -25,8 +23,8 @@ Connect to the server remotely using the command line.
 * Windows
   * [PuTTY](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html)
 * Android
-  * JuiceSSH
-  * Termux
+  * [JuiceSSH](https://juicessh.com/)
+  * [Termux](https://termux.dev/)
 
 ### X forwarding
 
@@ -46,14 +44,16 @@ Browse and manage files stored on the server.
 * Linux/OSX/Windows
   * [Filezilla](https://filezilla-project.org/download.php?type=client)
 
-    ![Filezilla](docs/imgs/filezilla.gif)
+    ![Filezilla](docs/imgs/filezilla.png)
   * [sshfs](https://www.digitalocean.com/community/tutorials/how-to-use-sshfs-to-mount-remote-file-systems-over-ssh)
 * Windows
   * [WinSCP](https://winscp.net/eng/index.php)
 
 ## `samba`
 
-Samba file shares can be mounted cross-platform as if th server data existed locally. The server provides two shares:
+Mount `samba` file shares on any platform as if the server data was on a local drive.
+
+The server provides two `samba` shares:
 
 1. Shared data array (`/mnt/data`): `\\username\\data`
 2. User's `$HOME` directory: `\\username\\username`
@@ -62,7 +62,7 @@ The default `samba` credentials are the same as your server username and passwor
 
 ## `x2goclient`
 
-Users can access an X2Go remote desktop session using `x2goclient` from a client. `x2goclient` is available for Linux/OSX/Windows from the [X2Go website](http://wiki.x2go.org/doku.php) or by installing the `x2goclient` package.
+Access an X2Go remote desktop session using the X2Go `x2goclient` available for Linux/OSX/Windows from the [X2Go website](http://wiki.x2go.org/doku.php) or by installing the `x2goclient` package.
 
 X2Go sessions can be paused or suspended from the X2Go client window. Multiple sessions can be created on the client, making it possible to select alternate quality settings based on location and bandwidth.
 
