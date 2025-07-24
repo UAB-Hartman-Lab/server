@@ -37,21 +37,19 @@ Launch graphical server programs locally on a client that execute on the server.
 
 ## `sftp`
 
-Browse and manage files stored on the server.
+Browse and manage files stored on the server. Best for Linux.
 
-* Native access to sftp shares using client file manager (`sftp://username@hartmanlab.genetics.uab.edu:/home/username`):
+* Access the server sftp via most file managers using a `sftp://` address.
+
   ![sftp](docs/imgs/sftp.png)
-* Linux/OSX/Windows
-  * [Filezilla](https://filezilla-project.org/download.php?type=client)
-
-    ![Filezilla](docs/imgs/filezilla.png)
-  * [sshfs](https://www.digitalocean.com/community/tutorials/how-to-use-sshfs-to-mount-remote-file-systems-over-ssh)
-* Windows
-  * [WinSCP](https://winscp.net/eng/index.php)
+* [Filezilla](https://filezilla-project.org/download.php?type=client) (Linux/OSX/Windows)
+  ![Filezilla](docs/imgs/filezilla.png)
+* [sshfs](https://www.digitalocean.com/community/tutorials/how-to-use-sshfs-to-mount-remote-file-systems-over-ssh) (Linux/OSX/Windows)
+* [WinSCP](https://winscp.net/eng/index.php) (Windows)
 
 ## `samba`
 
-Mount `samba` file shares on any platform as if the server data was on a local drive.
+Another method to browse and manage files stored on the server. Best for OSX/Windows.
 
 The server provides two `samba` shares:
 
@@ -91,31 +89,43 @@ X2Go sessions can be paused or suspended from the X2Go client window. Multiple s
 
 **Note:** Some programs do not continue to run at full speed when an X2Go session is paused. In these cases, the program should be run via `ssh` in a [`tmux`](https://en.wikipedia.org/wiki/Tmux) or [`screen`](https://www.gnu.org/software/screen/) session.
 
-## Robot computer remote desktop access
+## ~~Robot computer remote desktop access~~ (*currently unavailable*)
 
-In an X2Go session, go to *Applications>Internet>Remote Viewer>Connection>New* and enter [`vnc://192.168.16.101:5900`](vnc://192.168.16.101:5900)
+In an X2Go session, go to *Applications>Internet>Remote Viewer>Connection Address and enter [`vnc://192.168.16.101`](vnc://192.168.16.101)
+
+![remote_viewer](docs/imgs/remote_viewer.png)
 
 ## Webcam robot monitoring
 
 * In an X2Go session, via a web browser at [`http://localhost:9999`](http://localhost:9999)
 * Locally via a web browser via an SSH tunnel: `ssh -f username@hartmanlab.genetics.uab.edu -L 9999:localhost:9999 -N`
 
+![robot_camera](docs/imgs/robot_camera.png)
+
 ## RStudio Server
 
 * In an X2Go session, via a web browser at [`http://localhost:8787`](http://localhost:8787)
 * Locally via a web browser via an SSH tunnel: `ssh -f username@hartmanlab.genetics.uab.edu -L 8787:localhost:8787 -N`
 
-## JupyterLab (Python) IDE
+![rstudio_server](docs/imgs/rstudio_server.png)
 
-* In an X2Go session, via a web browser at [`http://localhost:8888`](http://localhost:8888)
-* Locally via a web browser via an SSH tunnel: `ssh -f username@hartmanlab.genetics.uab.edu -L 8888:localhost:8888 -N`
+## Other available software
+
+* [VSCode](https://code.visualstudio.com/) (IDE)
+* [MATLAB](https://www.mathworks.com/help/matlab/index.html)
+* [`qhtcp-workflow`](https://github.com/UAB-Hartman-Lab/qhtcp)
+* [`podman`](https://podman.io/) (containers)
+* [`toolbox`](https://docs.fedoraproject.org/en-US/fedora-silverblue/toolbox/) for custom software
+* [`distrobox`](https://github.com/89luca89/distrobox) for custom environments
 
 ## Data backup
 
 [`rsync`](https://linux.die.net/man/1/rsync) is recommended for periodically backing up user files to a local client.
 
-* Copy a user's `$HOME`' directory locally to `/home-backup`: `rsync -azH --delete username@hartmanlab.genetics.uab.edu:/home/username/ home-backup/`
-* Copy a shared directory locally `rsync -azh username@hartmanlab.genetics.uab.edu:/mnt/data/scans/20250723_roessler_project .`
+* Copy a user's `$HOME`' directory locally to `/home-backup` from a client: `rsync -azH --delete username@hartmanlab.genetics.uab.edu:/home/username/ home-backup/`
+* Copy a shared directory locally to the current directory from a client: `rsync -azh username@hartmanlab.genetics.uab.edu:/mnt/data/scans/20250723_roessler_project .`
+
+There are other tools available for initiating backups *from* the server, including `rsnapshot` and `borgbackup`.
 
 ## Troubleshooting
 
