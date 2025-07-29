@@ -86,7 +86,7 @@ X2Go sessions can be paused or suspended from the X2Go client window. Multiple s
   * Host: `hartmanlab.genetics.uab.edu`
   * Login: *`username`*
   * SSH port: `22`
-  * Session type: **MATE** (MATE provides the best experience with X2Go)
+  * Session type: **[MATE](https://mate-desktop.org/)** (provides the best experience with X2Go)
 
 ![x2go_server](docs/imgs/x2go_server.png)
 
@@ -105,7 +105,9 @@ X2Go sessions can be paused or suspended from the X2Go client window. Multiple s
 
 **Note:** Some programs do not continue to run at full speed when an X2Go session is paused. In these cases, the program should be run via `ssh` in a [`tmux`](https://en.wikipedia.org/wiki/Tmux) or [`screen`](https://www.gnu.org/software/screen/) session.
 
-## ~~Robot computer remote desktop access~~ (*currently unavailable*)
+## ~~Robot computer remote desktop access~~
+
+* *Currently unavailable* (TODO network cable unplugged?)
 
 * In an X2Go session go to *Applications>Internet>Remote Viewer>Connection Address* and enter [`vnc://192.168.16.101`](vnc://192.168.16.101).
 
@@ -135,18 +137,18 @@ X2Go sessions can be paused or suspended from the X2Go client window. Multiple s
 * [`podman`](https://podman.io/) for containers
 * [`toolbox`](https://docs.fedoraproject.org/en-US/fedora-silverblue/toolbox/) for custom software
 * [`distrobox`](https://github.com/89luca89/distrobox) for custom environments
-* ...and much more ([open an issue](https://github.com/UAB-Hartman-Lab/server/issues) for software requests)
+* ...and much more (see `dnf list --installed` for installed packages). [Open an issue](https://github.com/UAB-Hartman-Lab/server/issues) for missing or out-of-date software.
 
 ## Backing up your data
 
-`/mnt/data` is snapshotted daily to `/mnt/backup/data-backup`. In case of inadvertent data loss, users can recover lost files from a previous snapshot.
+`/mnt/data` is snapshotted daily to `/mnt/backup/data-backup`. In case of inadvertent data loss, users can recover lost files from a previous snapshot, organized by date.
 
-[`rsync`](https://linux.die.net/man/1/rsync) is recommended for periodically backing up user files to a local client.
+[`rsync`](https://linux.die.net/man/1/rsync) is also recommended for periodically backing up user files to a local client.
 
 * Copy a user's `$HOME` directory locally to `/home-backup` from a client: `rsync -azH --delete username@hartmanlab.genetics.uab.edu:/home/username/ home-backup/`
 * Copy a shared directory locally to the current directory from a client: `rsync -azh username@hartmanlab.genetics.uab.edu:/mnt/data/scans/20250723_roessler_project .`
 
-Backups can also be initiated *from* the server using other pre-installed backup tools (`rsnapshot`, `borgbackup`, ...).
+Backups can be initiated *from* the server using other pre-installed backup tools (`rsnapshot`, `borgbackup`, ...).
 
 ## Troubleshooting
 
@@ -165,10 +167,10 @@ Read the `motd` at `ssh` login for server status and updates: `cat /etc/motd`. N
   * Use `ls -al` or add permissions columns to your file manager to double-check the file permissions.
   * `/mnt/data` uses shared group permissions, usually:
     * Group: `smbgrp`
-    * User: user that created/owns the file or `smbgrp`
+    * User: *username* that created/owns the file (or `smbgrp`)
     * Permissions: `2775`
   * To change: `chown -R username:smbgrp <dir> && chmod 2775 <dir>`
-  * If your user does not have sufficient access to alter shared file permissions, have an admin fix or make a copy.
+  * If you do not have sufficient privileges to alter shared file permissions, ask an admin to fix or make a copy.
 
 ## Resources
 
