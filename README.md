@@ -3,7 +3,7 @@
 ## First-time login
 
 1. Ensure an admin has enabled your user account and provided you a username.
-2. Login via [`ssh`](#ssh): `ssh username@hartmanlab.genetics.uab.edu` (default password is your *username*)
+2. Login via [`ssh`](#ssh-remote-login): `ssh username@hartmanlab.genetics.uab.edu` (default password is your *username*)
 3. You will be prompted to create a new password and then logged out.
 4. Login again using your new password: `ssh username@hartmanlab.genetics.uab.edu`
 5. Change the default `samba` password (default password is also your *username*): `smbpasswd`
@@ -14,7 +14,13 @@
     ssh-copy-id -i ~/.ssh/id_rsa_4096.pub username@hartmanlab.genetics.uab.edu
     ```
 
-## `ssh`
+## Notes
+
+* Read the `motd` helper at `ssh` login for server status
+* To change your user password: `passwd`
+* To change your samba password: `smbpasswd`
+
+## `ssh` remote login
 
 Connect to the server remotely using the command line.
 
@@ -28,43 +34,48 @@ Connect to the server remotely using the command line.
 
 ### X forwarding
 
-Launch graphical server programs locally on a client that execute on the server.
+Launch graphical programs locally on a client that execute on the server.
+
+![x_forwarding](docs/imgs/x_forwarding.png)
 
 * Linux/OSX
   * Enable X forwarding during ssh login: `ssh -X username@hartmanlab.genetics.uab.edu`
 * Windows
   * Install [Xming](http://www.straightrunning.com/XmingNotes/) and enable X11 forwarding in the [PuTTY](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html) options.
 
-## `sftp`
+## `sftp` remote filesharing
 
-Browse and manage files stored on the server. Best for Linux.
+Browse and manage files stored on the server.
 
-* Access the server sftp via most file managers using a `sftp://` address.
+* Access sftp via most file managers using a `sftp://` address.
+
+  Example: `sftp://username@hartmanlab.genetics.uab.edu/home/username`
 
   ![sftp](docs/imgs/sftp.png)
 * [Filezilla](https://filezilla-project.org/download.php?type=client) (Linux/OSX/Windows)
+
   ![Filezilla](docs/imgs/filezilla.png)
 * [sshfs](https://www.digitalocean.com/community/tutorials/how-to-use-sshfs-to-mount-remote-file-systems-over-ssh) (Linux/OSX/Windows)
 * [WinSCP](https://winscp.net/eng/index.php) (Windows)
 
-## `samba`
+## `samba` remote filesharing
 
-Another method to browse and manage files stored on the server. Best for OSX/Windows.
+Another method to browse and manage files stored on the server.
 
 The server provides two `samba` shares:
 
 1. Shared data array (`/mnt/data`): `\\username\\data`
-2. User's `$HOME` directory: `\\username\\username`
+2. User home directory (`/home/username`): `\\username\\username`
 
-The default `samba` credentials are the same as your server username and password. Users can change their `samba` password using `smbpasswd`.
+The default `samba` credentials are the same as your server username and password until changed with `smbpasswd`.
 
 ![samba](docs/imgs/samba.png)
 
-## `x2goclient`
+## `x2goclient` remote desktop
+
+Launch a graphical remote desktop session using the X2Go `x2goclient` available for Linux/OSX/Windows from the [X2Go website](http://wiki.x2go.org/doku.php) or by installing the `x2goclient` package.
 
 ![x2go_desktop](docs/imgs/x2go_desktop.png)
-
-Access an X2Go remote desktop session using the X2Go `x2goclient` available for Linux/OSX/Windows from the [X2Go website](http://wiki.x2go.org/doku.php) or by installing the `x2goclient` package.
 
 X2Go sessions can be paused or suspended from the X2Go client window. Multiple sessions can be created on the client, making it possible to select alternate quality settings based on location and bandwidth.
 
@@ -118,27 +129,43 @@ In an X2Go session, go to *Applications>Internet>Remote Viewer>Connection Addres
 * [MATLAB](https://www.mathworks.com/help/matlab/index.html)
 * [Jupyter Notebook](https://jupyter.org/)
 * [`qhtcp-workflow`](https://github.com/UAB-Hartman-Lab/qhtcp)
-* [`podman`](https://podman.io/) (containers)
+* [`podman`](https://podman.io/) for containers
 * [`toolbox`](https://docs.fedoraproject.org/en-US/fedora-silverblue/toolbox/) for custom software
 * [`distrobox`](https://github.com/89luca89/distrobox) for custom environments
 * ...and much more ([open an issue](https://github.com/UAB-Hartman-Lab/server/issues) for software requests)
 
-## Data backups
+## Backing up your data
 
-[`rsync`](https://linux.die.net/man/1/rsync) is recommended for periodically backing up user files to a local client.
+`/mnt/data` is snapshotted daily to `/mnt/backup/data-backup`. In case of inadvertent data loss, users can recover lost files from a previous snapshot.
+
+[`rsync`](https://linux.die.net/man/1/rsync) is highly recommended for periodically backing up user files to a local client.
 
 * Copy a user's `$HOME`' directory locally to `/home-backup` from a client: `rsync -azH --delete username@hartmanlab.genetics.uab.edu:/home/username/ home-backup/`
 * Copy a shared directory locally to the current directory from a client: `rsync -azh username@hartmanlab.genetics.uab.edu:/mnt/data/scans/20250723_roessler_project .`
 
-There are other tools installed for initiating backups *from* the server, such as `rsnapshot` and `borgbackup`.
+Other popular backup tools are also installed on the server, including `rsnapshot` and `borgbackup`.
 
 ## Troubleshooting
 
-* Reset your X2Go sessions: `script-user-reset-x2go`
-* Reset your X2Go desktop: `script-user-reset-desktop`
-* Change your user login password: `passwd`
-* Change your samba password: `smbpasswd`
-* Read the `motd` for service statuses and updates: `cat /etc/motd`
+Read the `motd` for service statuses and updates: `cat /etc/motd`
+
+* Can't login via `ssh`
+  * Make sure that you are using the correct username and caps lock is off.
+  * Three consecutive failed logins from an off-campus computer will ban the IP for one hour.
+  * Request an administrator to run: `sudo script-user-unban <ip_address>` to unban your IP address
+  * Request an administrator to run: `sudo script-user-reset-password <username>` to reset your login password
+* Can't login via X2Go
+  * Login via `ssh` and reset corrupt X2Go sessions: `script-user-reset-x2go`
+* X2Go desktop is corrupted (desktop not similar to [screenshot](#x2goclient-remote-desktop))
+  * Login via ssh and reset your desktop: `script-user-reset-desktop`
+* Permissions issues
+  * Use `ls -al` or add permissions columns to your file manager to double-check the file permissions.
+  * `/mnt/data` uses shared group permissions, usually:
+    * Group: `smbgrp`
+    * User: user that created/owns the file or `smbgrp`
+    * Permissions: `2775`
+  * To change: `chown -R username:smbgrp <dir> && chmod 2775 <dir>`
+  * If your user does not have sufficient access to alter file permissions, either have admin fix, or make a new copy.
 
 ## Resources
 
@@ -153,8 +180,8 @@ There are other tools installed for initiating backups *from* the server, such a
 * Intel Xeon X99 E5-2650v4 12-core CPU
 * 96GB DDR4 RAM
 * 4TB PCIe 3.0 NVMe SSD: `/`, `/home`
-* 20TB btrfs raid1 array: `/mnt/data`
-* 20TB btrfs raid1 backup array: `/mnt/backup`
+* 20TB `btrfs` raid1 array: `/mnt/data`
+* 20TB `btrfs` raid1 backup array: `/mnt/backup`
 
 ## Administrators
 
