@@ -16,7 +16,7 @@
 
 ## Notes
 
-* Read the `motd` helper at `ssh` login for server status
+* Read the `motd` helper at `ssh` login for ongoing server status
 * To change your user password: `passwd`
 * To change your samba password: `smbpasswd`
 
@@ -32,7 +32,7 @@ Connect to the server remotely using the command line.
   * [JuiceSSH](https://juicessh.com/)
   * [Termux](https://termux.dev/)
 
-### X forwarding
+### `ssh` X forwarding
 
 Launch graphical programs locally on a client that execute on the server.
 
@@ -138,16 +138,16 @@ In an X2Go session, go to *Applications>Internet>Remote Viewer>Connection Addres
 
 `/mnt/data` is snapshotted daily to `/mnt/backup/data-backup`. In case of inadvertent data loss, users can recover lost files from a previous snapshot.
 
-[`rsync`](https://linux.die.net/man/1/rsync) is highly recommended for periodically backing up user files to a local client.
+[`rsync`](https://linux.die.net/man/1/rsync) is recommended for periodically backing up user files to a local client.
 
-* Copy a user's `$HOME`' directory locally to `/home-backup` from a client: `rsync -azH --delete username@hartmanlab.genetics.uab.edu:/home/username/ home-backup/`
+* Copy a user's `$HOME` directory locally to `/home-backup` from a client: `rsync -azH --delete username@hartmanlab.genetics.uab.edu:/home/username/ home-backup/`
 * Copy a shared directory locally to the current directory from a client: `rsync -azh username@hartmanlab.genetics.uab.edu:/mnt/data/scans/20250723_roessler_project .`
 
-Other popular backup tools are also installed on the server, including `rsnapshot` and `borgbackup`.
+Backups can also be initiated *from* the server using other pre-installed backup tools (`rsnapshot`, `borgbackup`, ...).
 
 ## Troubleshooting
 
-Read the `motd` for service statuses and updates: `cat /etc/motd`
+Read the `motd` at `ssh` login for server status and updates: `cat /etc/motd`. Notify an admin of any issues.
 
 * Can't login via `ssh`
   * Make sure that you are using the correct username and caps lock is off.
@@ -158,14 +158,14 @@ Read the `motd` for service statuses and updates: `cat /etc/motd`
   * Login via `ssh` and reset corrupt X2Go sessions: `script-user-reset-x2go`
 * X2Go desktop is corrupted (desktop not similar to [screenshot](#x2goclient-remote-desktop))
   * Login via ssh and reset your desktop: `script-user-reset-desktop`
-* Permissions issues
+* File permissions issues
   * Use `ls -al` or add permissions columns to your file manager to double-check the file permissions.
   * `/mnt/data` uses shared group permissions, usually:
     * Group: `smbgrp`
     * User: user that created/owns the file or `smbgrp`
     * Permissions: `2775`
   * To change: `chown -R username:smbgrp <dir> && chmod 2775 <dir>`
-  * If your user does not have sufficient access to alter file permissions, either have admin fix, or make a new copy.
+  * If your user does not have sufficient access to alter shared file permissions, have an admin fix or make a copy.
 
 ## Resources
 
@@ -174,7 +174,7 @@ Read the `motd` for service statuses and updates: `cat /etc/motd`
 * [Explainshell](https://explainshell.com/)
 * [UAB Cheaha](https://docs.uabgrid.uab.edu/wiki/Cheaha_GettingStarted)
 
-## Hardware Platform
+## Platform
 
 * AlmaLinux 9.6 w/ Linux 6.1 LTS Hyperscale SIG kernel
 * Intel Xeon X99 E5-2650v4 12-core CPU
