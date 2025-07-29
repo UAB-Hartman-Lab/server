@@ -16,7 +16,7 @@
 
 ## Notes
 
-* Read the `ssh` login message for ongoing server status.
+* Read the `ssh` login message for ongoing server status updates.
 * To change your user password: `passwd`
 * To change your samba password: `smbpasswd`
 
@@ -67,6 +67,8 @@ The server provides two `samba` shares:
 2. User home directory (`/home/username`): `\\username\\username`
 
 The default `samba` credentials are the same as your server username and password (unless modified with `smbpasswd`).
+
+**Note:** Samba share are only available on-campus unless also using ssh tunneling: `ssh -L 1445:localhost:445 user@remote-server`
 
 ![samba](docs/imgs/samba.png)
 
@@ -140,7 +142,7 @@ X2Go sessions can be paused or suspended from the X2Go client window. Multiple s
 
 `/mnt/data` is snapshotted daily to `/mnt/backup/data-backup` and rolling backups are kept for six months.
 
-[`rsync`](https://linux.die.net/man/1/rsync) is also recommended for periodically backing up user files to a local client.
+[`rsync`](https://linux.die.net/man/1/rsync) is recommended for periodically backing up user files to a local client.
 
 * Copy a user's `$HOME` directory locally to `/home-backup` from a client: `rsync -azH --delete username@hartmanlab.genetics.uab.edu:/home/username/ home-backup/`
 * Copy a shared directory locally to the current directory from a client: `rsync -azh username@hartmanlab.genetics.uab.edu:/mnt/data/scans/20250723_roessler_project .`
@@ -149,7 +151,7 @@ Backups can also be initiated *from* the server using a variety of pre-installed
 
 ## Troubleshooting
 
-Read the `ssh` login message for server status and updates: `cat /etc/motd`. Notify an admin of any issues.
+Read the `ssh` login message for server status and updates or run `cat /etc/motd`. [Open an issue](https://github.com/UAB-Hartman-Lab/server/issues) if there is one.
 
 * Can't login via `ssh`
   * Make sure that you are using the correct username and caps lock is off.
