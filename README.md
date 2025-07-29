@@ -151,7 +151,7 @@ Backups can also be initiated *from* the server using a variety of pre-installed
 
 ## Troubleshooting
 
-Read the `ssh` login message for server status and updates or run `cat /etc/motd`. [Open an issue](https://github.com/UAB-Hartman-Lab/server/issues) if there is one.
+Read the `ssh` login message (`cat /etc/motd`) for server status and updates. [Open an issue](https://github.com/UAB-Hartman-Lab/server/issues) if there is one.
 
 * Can't login via `ssh`
   * Make sure that you are using the correct username and caps lock is off.
