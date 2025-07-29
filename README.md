@@ -79,7 +79,7 @@ Launch a graphical remote desktop session using the X2Go `x2goclient` available 
 
 X2Go sessions can be paused or suspended from the X2Go client window. Multiple sessions can be created on the client, making it possible to select alternate quality settings based on location and bandwidth.
 
-![x2go_server](docs/imgs/x2go_server.png)
+### `x2goclient` configuration
 
 * Session tab
   * Session name: Hartman Lab Server
@@ -87,6 +87,9 @@ X2Go sessions can be paused or suspended from the X2Go client window. Multiple s
   * Login: *`username`*
   * SSH port: `22`
   * Session type: **MATE** (MATE provides the best experience with X2Go)
+
+![x2go_server](docs/imgs/x2go_server.png)
+
 * Connection tab
   * Set the connection speed to LAN when connecting from within the UAB network and WAN when outside of the UAB network
   * Compression settings should be left unchanged or set to *adaptive*.
@@ -104,9 +107,9 @@ X2Go sessions can be paused or suspended from the X2Go client window. Multiple s
 
 ## ~~Robot computer remote desktop access~~ (*currently unavailable*)
 
-In an X2Go session, go to *Applications>Internet>Remote Viewer>Connection Address and enter [`vnc://192.168.16.101`](vnc://192.168.16.101)
+* In an X2Go session go to *Applications>Internet>Remote Viewer>Connection Address* and enter [`vnc://192.168.16.101`](vnc://192.168.16.101).
 
-![remote_viewer](docs/imgs/remote_viewer.png)
+  ![remote_viewer](docs/imgs/remote_viewer.png)
 
 ## Webcam robot monitoring
 
