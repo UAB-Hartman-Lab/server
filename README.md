@@ -16,7 +16,7 @@
 
 ## Notes
 
-* Read the `motd` helper at `ssh` login for ongoing server status
+* Read the `ssh` login message for ongoing server status.
 * To change your user password: `passwd`
 * To change your samba password: `smbpasswd`
 
@@ -47,9 +47,8 @@ Launch graphical programs locally on a client that execute on the server.
 
 Browse and manage files stored on the server.
 
-* Access sftp via most file managers using a `sftp://` address.
-
-  Example: `sftp://username@hartmanlab.genetics.uab.edu/home/username`
+* File manager
+  * Enter the `sftp://` address into your file manager's url bar, such as: `sftp://username@hartmanlab.genetics.uab.edu/home/username`
 
   ![sftp](docs/imgs/sftp.png)
 * [Filezilla](https://filezilla-project.org/download.php?type=client) (Linux/OSX/Windows)
@@ -67,13 +66,13 @@ The server provides two `samba` shares:
 1. Shared data array (`/mnt/data`): `\\username\\data`
 2. User home directory (`/home/username`): `\\username\\username`
 
-The default `samba` credentials are the same as your server username and password until changed with `smbpasswd`.
+The default `samba` credentials are the same as your server username and password (unless modified with `smbpasswd`).
 
 ![samba](docs/imgs/samba.png)
 
 ## `x2goclient` remote desktop
 
-Launch a graphical remote desktop session using the X2Go `x2goclient` available for Linux/OSX/Windows from the [X2Go website](http://wiki.x2go.org/doku.php) or by installing the `x2goclient` package.
+Launch a persistent remote desktop session for graphical applications using [`x2goclient`](https://wiki.x2go.org/doku.php/download:start) (Linux/Windows/OSX).
 
 ![x2go_desktop](docs/imgs/x2go_desktop.png)
 
@@ -102,8 +101,6 @@ X2Go sessions can be paused or suspended from the X2Go client window. Multiple s
   * Select folders on the client to be shared with the server during a session. Browse to the chosen folder, add it to the share, and select *automount*.
   * These folders will then appear on the server under `/media/disk/<share_name>`.
     ![x2go_server](docs/imgs/x2go_automount.png)
-
-**Note:** Some programs do not continue to run at full speed when an X2Go session is paused. In these cases, the program should be run via `ssh` in a [`tmux`](https://en.wikipedia.org/wiki/Tmux) or [`screen`](https://www.gnu.org/software/screen/) session.
 
 ## ~~Robot computer remote desktop access~~
 
@@ -141,18 +138,18 @@ X2Go sessions can be paused or suspended from the X2Go client window. Multiple s
 
 ## Backing up your data
 
-`/mnt/data` is snapshotted daily to `/mnt/backup/data-backup`. In case of inadvertent data loss, users can recover lost files from a previous snapshot, organized by date.
+`/mnt/data` is snapshotted daily to `/mnt/backup/data-backup` and rolling backups are kept for six months.
 
 [`rsync`](https://linux.die.net/man/1/rsync) is also recommended for periodically backing up user files to a local client.
 
 * Copy a user's `$HOME` directory locally to `/home-backup` from a client: `rsync -azH --delete username@hartmanlab.genetics.uab.edu:/home/username/ home-backup/`
 * Copy a shared directory locally to the current directory from a client: `rsync -azh username@hartmanlab.genetics.uab.edu:/mnt/data/scans/20250723_roessler_project .`
 
-Backups can be initiated *from* the server using other pre-installed backup tools (`rsnapshot`, `borgbackup`, ...).
+Backups can also be initiated *from* the server using a variety of pre-installed backup tools (`rsnapshot`, `borgbackup`, ...).
 
 ## Troubleshooting
 
-Read the `motd` at `ssh` login for server status and updates: `cat /etc/motd`. Notify an admin of any issues.
+Read the `ssh` login message for server status and updates: `cat /etc/motd`. Notify an admin of any issues.
 
 * Can't login via `ssh`
   * Make sure that you are using the correct username and caps lock is off.
@@ -171,6 +168,8 @@ Read the `motd` at `ssh` login for server status and updates: `cat /etc/motd`. N
     * Permissions: `2775`
   * To change: `chown -R username:smbgrp <dir> && chmod 2775 <dir>`
   * If you do not have sufficient privileges to alter shared file permissions, ask an admin to fix or make a copy.
+* Program runs slowly in paused X2Go session
+  * Run program via `ssh` in a [`tmux`](https://en.wikipedia.org/wiki/Tmux) or [`screen`](https://www.gnu.org/software/screen/) session instead.
 
 ## Resources
 
