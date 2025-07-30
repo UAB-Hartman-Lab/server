@@ -3,9 +3,9 @@
 ## First-time login
 
 1. Ensure an admin has enabled your user account and provided you a username.
-2. Login via [`ssh`](#ssh-remote-login): `ssh username@hartmanlab.genetics.uab.edu` (default password is your *username*)
+2. Login via [`ssh`](#ssh-remote-login): **`ssh username@hartmanlab.genetics.uab.edu`** (default password is your *username*)
 3. You will be prompted to create a new password and then logged out.
-4. Login again using your new password: `ssh username@hartmanlab.genetics.uab.edu`
+4. Login again using your new password: **`ssh username@hartmanlab.genetics.uab.edu`**
 5. Change the default `samba` password (default password is also your *username*): `smbpasswd`
 6. *Optional*: Generate a public-private keypair on your client and copy it to the server for faster and more secure logins.
 
@@ -25,7 +25,7 @@
 Connect to the server remotely using the command line.
 
 * Linux/OSX
-  * `ssh username@hartmanlab.genetics.uab.edu`
+  * **`ssh username@hartmanlab.genetics.uab.edu`**
 * Windows
   * [PuTTY](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html)
 * Android
