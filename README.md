@@ -17,8 +17,9 @@
 ## Notes
 
 * Read the `ssh` login message for ongoing server status updates.
-* To change your user password: `passwd`
-* To change your samba password: `smbpasswd`
+* See [Troubleshooting](#troubleshooting) and [Resources](#github-resources) for help.
+* Change your user password: `passwd`
+* Change your samba password: `smbpasswd`
 
 ## `ssh` remote login
 
@@ -140,7 +141,7 @@ X2Go sessions can be paused or suspended from the X2Go client window. Multiple s
 
 ## Backing up your data
 
-`/mnt/data` is snapshotted daily to `/mnt/backup/data-backup` and rolling backups are kept for six months.
+`/mnt/data` is snapshotted daily to `/mnt/backup/data-backup` and rolling backups are retained for six months.
 
 [`rsync`](https://linux.die.net/man/1/rsync) is recommended for periodically backing up user files to a local client.
 
@@ -173,7 +174,13 @@ Read the `ssh` login message (`cat /etc/motd`) for server status and updates. [O
 * Program runs slowly in paused X2Go session
   * Run program via `ssh` in a [`tmux`](https://en.wikipedia.org/wiki/Tmux) or [`screen`](https://www.gnu.org/software/screen/) session instead.
 
-## Resources
+## GitHub Resources
+
+* [Issues](https://github.com/UAB-Hartman-Lab/server/issues)
+* [Wiki](https://github.com/UAB-Hartman-Lab/server/wiki)
+* [Chat](https://github.com/UAB-Hartman-Lab/server/discussions)
+
+## External Resources
 
 * [RHEL documentation](https://access.redhat.com/documentation/en/red-hat-enterprise-linux/)
 * [Navigating the Linux CLI](https://www.digitalocean.com/community/tutorials/basic-linux-navigation-and-file-management)
