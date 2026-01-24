@@ -105,11 +105,9 @@ X2Go sessions can be paused or suspended from the X2Go client window. Multiple s
   * These folders will then appear on the server under `/media/disk/<share_name>`.
     ![x2go_server](docs/imgs/x2go_automount.png)
 
-## ~~Robot computer remote desktop access~~
+## Robot computer remote desktop access
 
-* *Currently unavailable* (TODO network cable unplugged?)
-
-* In an X2Go session go to *Applications>Internet>Remote Viewer>Connection Address* and enter [`vnc://192.168.16.101`](vnc://192.168.16.101).
+* In an X2Go session go to *Applications>Internet>Remote Viewer>Connection Address* and enter [`vnc://192.168.16.101:5900`](vnc://192.168.16.101:5900).
 
   ![remote_viewer](docs/imgs/remote_viewer.png)
 
@@ -198,4 +196,4 @@ Read the `ssh` login message (`cat /etc/motd`) for server status and updates. [O
 
 ## Administrators
 
-See additional documentation in [`docs/README.md`](docs/README.md).
+For additional documentation see [`docs/README.md`](docs/README.md).
