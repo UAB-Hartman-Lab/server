@@ -89,7 +89,7 @@ The server provides two `samba` shares (credentials: server username/password):
 
 ## Robot computer remote filesharing
 
-* In X2Go, open *Applications > System Tools > Caja*, enter [`ftp://robot`](ftp://robot) in the Location bar. Open a second Caja window to drag and drop projects to `/mnt/data`.
+* In X2Go, open *Applications > System Tools > Caja*, enter [`ftp://robot`](ftp://robot) in the Location bar. Open a second Caja window to drag and drop projects to the shared data array.
 
   ![robot_fileshare](docs/imgs/robot_fileshare.png)
 
