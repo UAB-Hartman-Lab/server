@@ -21,8 +21,6 @@
 
 Connect to a persistent remote desktop using [`x2goclient`](https://wiki.x2go.org/doku.php/download:start) (Linux/Windows/OSX).
 
-Sessions can be paused or suspended from the client window. Create multiple sessions with different quality settings for different network conditions.
-
 ### `x2goclient` configuration
 
 * **Session tab**
@@ -31,10 +29,12 @@ Sessions can be paused or suspended from the client window. Create multiple sess
   * Login: *`username`*
   * SSH port: `22`
   * Session type: **[MATE](https://mate-desktop.org/)** (provides the best experience with X2Go)
-  ![x2go_server](docs/imgs/x2go_server.png)
+
+![x2go_server](docs/imgs/x2go_server.png)
 
 * **Connection tab**
   * Set connection speed to **LAN** (on-campus) or **WAN** (off-campus); leave compression as *adaptive*.
+  * It's possible to create multiple sessions with different quality settings for different network conditions.
 * **Input/output tab**
   * If automatic resizing fails (common on HiDPI), set a manual startup resolution. For scaling issues, try DPI 96.
   * For keyboard mapping issues (e.g., broken arrow keys), select *Configure Keyboard* and keep the defaults.
@@ -42,15 +42,18 @@ Sessions can be paused or suspended from the client window. Create multiple sess
   * Disable sound support to prevent pulseaudio log spam.
 * **Shared folders tab**
   * Browse to a folder, add it to the share, and select *automount*. Shared folders appear at `/media/disk/<share_name>`.
-    ![x2go_server](docs/imgs/x2go_automount.png)
+
+  ![x2go_server](docs/imgs/x2go_automount.png)
 
 ## `ssh` remote login
+
+Login to the server using a text shell.
 
 * Linux/OSX: **`ssh username@hartmanlab.genetics.uab.edu`**
 * Windows: [PuTTY](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html)
 * Android: [JuiceSSH](https://juicessh.com/) or [Termux](https://termux.dev/)
 
-### `ssh` X forwarding
+## `ssh` X forwarding
 
 Run graphical programs on the server with local display output.
 
@@ -61,18 +64,19 @@ Run graphical programs on the server with local display output.
 
 ## `sftp` remote filesharing
 
-* File manager (*Caja*): enter `sftp://username@hartmanlab.genetics.uab.edu/home/username` in the URL bar
+Access files shared from the server.
 
+* `caja` (or other graphical file manager)
+  * Enter `sftp://username@hartmanlab.genetics.uab.edu/home/username` in the URL bar.
   ![sftp](docs/imgs/sftp.png)
 * [Filezilla](https://filezilla-project.org/download.php?type=client) (Linux/OSX/Windows)
-
   ![Filezilla](docs/imgs/filezilla.png)
 * [sshfs](https://www.digitalocean.com/community/tutorials/how-to-use-sshfs-to-mount-remote-file-systems-over-ssh) (Linux/OSX/Windows)
 * [WinSCP](https://winscp.net/eng/index.php) (Windows)
 
 ## `samba` remote filesharing
 
-The server provides two `samba` shares (credentials: server username/password):
+The server provides two `samba` shares (default credentials: server username/password):
 
 1. Shared data array (`/mnt/data`): `\\username\\data`
 2. User home directory (`/home/username`): `\\username\\username`
@@ -81,28 +85,28 @@ The server provides two `samba` shares (credentials: server username/password):
 
 ![samba](docs/imgs/samba.png)
 
-## Robot computer remote desktop
+## Robot computer remote VNC desktop
 
-* In X2Go, open *Applications > Internet > Remote Viewer*, enter [`vnc://robot:5900`](vnc://robot:5900) in *Connection Address*, and click Connect.
+* In an X2Go session, open *Applications>Internet>Remote Viewer*, enter [`vnc://robot:5900`](vnc://robot:5900) in *Connection Address*, and click Connect.
 
   ![remote_viewer](docs/imgs/remote_viewer.png)
 
-## Robot computer remote filesharing
+## Robot computer remote FTP filesharing
 
-* In X2Go, open *Applications > System Tools > Caja*, enter [`ftp://robot`](ftp://robot) in the Location bar, and hit *Enter*. Open a second Caja window to drag-and-drop or copy-paste projects to the shared data array.
+* In an X2Go session, open *Applications>System Tools>Caja*, enter [`ftp://robot`](ftp://robot) in the Location bar, and hit *Enter*. Open a second Caja window to drag-and-drop or copy-paste projects to the shared data array.
 
   ![robot_fileshare](docs/imgs/robot_fileshare.png)
 
 ## Robot webcam
 
-* In an X2Go session, via a web browser at [`http://localhost:9999`](http://localhost:9999)
+* In an X2Go session, open *Applications>Internet>Firefox*, enter [`http://localhost:9999`](http://localhost:9999) in the url bar.
 * Locally via a web browser via an SSH tunnel: `ssh -f username@hartmanlab.genetics.uab.edu -L 9999:localhost:9999 -N`
 
 ![robot_camera](docs/imgs/robot_camera.png)
 
 ## RStudio Server
 
-* In an X2Go session, via a web browser at [`http://localhost:8787`](http://localhost:8787)
+* In an X2Go session, open *Applications>Internet>Firefox*, enter [`http://localhost:8787`](http://localhost:8787)
 * Locally via a web browser via an SSH tunnel: `ssh -f username@hartmanlab.genetics.uab.edu -L 8787:localhost:8787 -N`
 
 ![rstudio_server](docs/imgs/rstudio_server.png)
